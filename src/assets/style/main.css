@@ -1,0 +1,12 @@
+@import './base.scss';
+@import './naiveui.scss';
+@import './style.scss';
+
+#app {
+  position: relative;
+  max-width: 1920px;
+  min-width: 375px;
+  font-weight: normal;
+  padding: 20px;
+  margin: 0 auto;
+}

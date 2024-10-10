@@ -1,0 +1,66 @@
+$gray: #e5e5e5;
+$gray1: #333;
+$gray2: #4f4f4f;
+$gray3: #828282;
+$gray4: #bdbdbd;
+$gray5: #e0e0e0;
+$gray6: #f2f2f2;
+
+
+/*rwd*/
+$xxxl: 1600px;
+$xxl: 1440px;
+$xl: 1024px;
+$lg: 991px;
+$md: 767px;
+$sm: 575px;
+$xs: 480px;
+$xxs: 350px;
+
+@mixin xxxl {
+  @media (max-width: $xxxl) {
+    @content;
+  }
+}
+
+@mixin xxl {
+  @media (max-width: $xxl) {
+    @content;
+  }
+}
+
+@mixin xl {
+  @media (max-width: $xl) {
+    @content;
+  }
+}
+
+@mixin lg {
+  @media (max-width: $lg) {
+    @content;
+  }
+}
+
+@mixin md {
+  @media (max-width: $md) {
+    @content;
+  }
+}
+
+@mixin sm {
+  @media (max-width: $sm) {
+    @content;
+  }
+}
+
+@mixin xs {
+  @media (max-width: $xs) {
+    @content;
+  }
+}
+
+@mixin xxs {
+  @media (max-width: $xxs) {
+    @content;
+  }
+}

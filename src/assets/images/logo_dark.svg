@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="50" viewBox="0 0 200 50">
+  <!-- Background -->
+  <rect width="200" height="50" fill="transparent"/>
+  
+  <!-- Logo -->
+  <g transform="translate(10, 10) scale(0.4)">
+    <rect x="0" y="0" width="80" height="80" rx="10" fill="#4a90e2"/>
+    <path d="M20 25 L40 15 L60 25 L60 55 L40 65 L20 55 Z" fill="white"/>
+    <circle cx="40" cy="40" r="10" fill="#4a90e2"/>
+  </g>
+  
+  <!-- Text -->
+  <text x="55" y="35" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#4a90e2">
+    Admin<tspan fill="#ffffffaa">Hub</tspan>
+  </text>
+</svg>

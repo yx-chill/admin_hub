@@ -1,0 +1,106 @@
+:root {
+  --color: #4a90e2;
+  --block-border-radius: 18px;
+  --base-gap: 20px;
+
+  --color-base: #000;
+  --color-text: #111c2d;
+  --color-background: rgb(240, 245, 249);
+  --block-color-background: rgb(255, 255, 255);
+  --block-color-background-o9: rgba(255, 255, 255, 0.9);
+  --block-box-shadow: 0 2px 6px #2553b91a;
+  --backdrop-background: rgba(0, 0, 0, 0.5);
+  --menu-title-color: #00000099;
+  --edit-img-background: rgba(0, 0, 0, 0.45);
+  --edit-img-background-hover: rgba(0, 0, 0, 1);
+  --tabs-border-color: #e0e0e0;
+  --red: #d03050;
+
+  // weight
+  --copyright-weight: 400;
+
+  @include sm {
+    --base-gap: 16px;
+  }
+}
+
+/* @media (prefers-color-scheme: dark) {} */
+
+[color-scheme='dark'] {
+  --color-base: #fff;
+  --color-text: #ffffffde;
+  --color-background: #1a1a1a;
+  --block-color-background: rgb(36, 36, 36);
+  --block-color-background-o9: rgba(36, 36, 36, 0.9);
+  --block-box-shadow: 0 0 0 1px #ffffff2a;
+  --backdrop-background: rgba(255, 255, 255, 0.05);
+  --menu-title-color: #ffffff99;
+  --edit-img-background: rgba(255, 255, 255, 0.3);
+  --edit-img-background-hover: rgba(255, 255, 255, 0.6);
+  --tabs-border-color: #ffffff3a;
+  --red: #e88080;
+
+  // weight
+  --copyright-weight: 300;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  font-weight: normal;
+}
+
+body {
+  height: 100dvh;
+  /* font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    'Fira Sans',
+    'Droid Sans',
+    'Helvetica Neue',
+    sans-serif; */
+  font-family: 'Noto Sans TC', 'Roboto', sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--color-text);
+  background-color: var(--color-background);
+  transition:
+    color 0.5s,
+    background-color 0.5s;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-y: auto;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+img,
+iframe {
+  vertical-align: middle;
+}
+
+button {
+  font-family: 'Noto Sans TC', 'Roboto', sans-serif;
+  cursor: pointer;
+}
+
+ul,
+ol {
+  list-style: none;
+  padding: 0;
+}
