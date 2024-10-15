@@ -1,34 +1,18 @@
 <script setup>
-import { Icon } from '@iconify/vue'
-import { useDateFormat, useNow, useDark, useToggle } from '@vueuse/core'
-
-const formatted = useDateFormat(useNow(), 'YYYY-MM-DD HH:mm:ss')
-
-const isDark = useDark({
-  selector: 'body',
-  attribute: 'color-scheme',
-  valueDark: 'dark',
-  valueLight: 'light'
-})
-
-const toggleDark = useToggle(isDark)
+import WebLogo from '@/components/WebLogo.vue'
+import HeaderTime from '@/components/Header/HeaderTime.vue'
+import BtnColorScheme from '@/components/Btn/BtnColorScheme.vue'
 </script>
 
 <template>
   <header class="header login-header">
-    <RouterLink class="logo" to="/">
-      <img v-if="isDark" src="@/assets/images/logo_dark.svg" alt="Admin Hub" />
-      <img v-else src="@/assets/images/logo.svg" alt="Admin Hub" />
-    </RouterLink>
+    <WebLogo />
 
     <div class="time">
-      <time>{{ formatted }}</time>
+      <HeaderTime />
     </div>
 
-    <button type="button" class="btn-color-scheme" @click="toggleDark()">
-      <Icon v-if="isDark" icon="ph:sun-duotone" />
-      <Icon v-else icon="ph:moon-duotone" />
-    </button>
+    <BtnColorScheme />
   </header>
 </template>
 
@@ -40,9 +24,5 @@ const toggleDark = useToggle(isDark)
 
 .time {
   text-align: center;
-}
-
-.btn-color-scheme {
-  margin-left: auto;
 }
 </style>

@@ -1,22 +1,17 @@
 <script setup>
-import { useStateStore } from '@/stores/state'
-import { storeToRefs } from 'pinia'
-import { useDateFormat, useNow, useDark, useToggle } from '@vueuse/core'
-import { Icon } from '@iconify/vue'
 import { NAvatar } from 'naive-ui'
+import { storeToRefs } from 'pinia'
+import { useToggle } from '@vueuse/core'
+import { Icon } from '@iconify/vue'
+import { useStateStore } from '@/stores/state'
+import { useAuthStore } from '@/stores/auth'
+import HeaderTime from '@/components/Header/HeaderTime.vue'
+import BtnColorScheme from '@/components/Btn/BtnColorScheme.vue'
 
-const formatted = useDateFormat(useNow(), 'YYYY-MM-DD HH:mm:ss')
-
-const isDark = useDark({
-  selector: 'body',
-  attribute: 'color-scheme',
-  valueDark: 'dark',
-  valueLight: 'light'
-})
-const toggleDark = useToggle(isDark)
-
-const state = useStateStore()
-const { menuState } = storeToRefs(state)
+const stateStore = useStateStore()
+const authStore = useAuthStore()
+const { menuState } = storeToRefs(stateStore)
+const { isAuthenticated, user } = storeToRefs(authStore)
 const toggleMenu = useToggle(menuState)
 </script>
 
@@ -26,22 +21,14 @@ const toggleMenu = useToggle(menuState)
       <button type="button" class="btn-hamburger" @click="toggleMenu()">
         <Icon icon="pepicons-print:hamburger" />
       </button>
-      <time>{{ formatted }}</time>
+      <HeaderTime />
     </div>
 
     <div class="flex">
-      <button type="button" class="btn-color-scheme" @click="toggleDark()">
-        <Icon v-if="isDark" icon="ph:sun-duotone" />
-        <Icon v-else icon="ph:moon-duotone" />
-      </button>
+      <BtnColorScheme />
 
-      <RouterLink class="link-profile" to="/profile">
-        <NAvatar
-          v-if="1"
-          round
-          size="36"
-          src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
-        />
+      <RouterLink v-if="isAuthenticated" class="link-profile" to="/profile" title="You">
+        <NAvatar v-if="user.avatar" round size="36" src="user.avatar" />
         <Icon v-else icon="lineicons:user" />
       </RouterLink>
     </div>

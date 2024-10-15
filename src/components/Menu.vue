@@ -1,28 +1,38 @@
 <script setup>
-import { useStateStore } from '@/stores/state'
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { NScrollbar } from 'naive-ui'
-import { useDark, onClickOutside } from '@vueuse/core'
+
+import { onClickOutside } from '@vueuse/core'
+import { useStateStore } from '@/stores/state'
+import { useAuthStore } from '@/stores/auth'
+import { logout } from '@/api/auth'
 import { Icon } from '@iconify/vue'
-import { ref } from 'vue'
+import WebLogo from '@/components/WebLogo.vue'
 
 const menuRef = ref(null)
-const isDark = useDark()
 const state = useStateStore()
 const { menuState } = storeToRefs(state)
+
+const authStore = useAuthStore()
+const router = useRouter()
 
 onClickOutside(menuRef, () => {
   menuState.value = false
 })
+
+const handleLogout = async () => {
+  await logout()
+  authStore.clearUser()
+  router.push({ name: 'Login' })
+}
 </script>
 
 <template>
   <div ref="menuRef" class="menu" :class="{ show: menuState }">
     <div class="menu-Header">
-      <RouterLink class="logo" to="/">
-        <img v-if="isDark" src="@/assets/images/logo_dark.svg" alt="Admin Hub" />
-        <img v-else src="@/assets/images/logo.svg" alt="Admin Hub" />
-      </RouterLink>
+      <WebLogo />
     </div>
 
     <NScrollbar style="flex: 1">
@@ -121,7 +131,7 @@ onClickOutside(menuRef, () => {
     </NScrollbar>
 
     <div class="menu-footer">
-      <button type="button" class="btn-logout">
+      <button type="button" class="btn-logout" title="登出" @click="handleLogout">
         <Icon icon="clarity:logout-line" />
         登出
       </button>

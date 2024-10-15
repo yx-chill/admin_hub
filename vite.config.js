@@ -23,4 +23,19 @@ export default defineConfig({
       }
     }
   },
+  server: {
+    port: '5173',
+    proxy: {
+      '/base': {
+        target: 'https://adminhub.sally-handmade.com',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/base/, '')
+      },
+      '/api': {
+        target: 'https://adminhub.sally-handmade.com/api/v1/admin',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, '')
+      }
+    }
+  }
 })

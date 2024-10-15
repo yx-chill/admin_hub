@@ -3,7 +3,7 @@
   &.form-tabs {
 
     .n-tab-pane {
-      padding-top: 48px;
+      padding: 48px 2px 2px;
     }
 
     .n-tabs-tab {
@@ -84,7 +84,8 @@
     --n-border-radius: 50px !important;
   }
 
-  input {
+  input,
+  .n-input__placeholder {
     letter-spacing: 0.1em;
   }
 
@@ -96,6 +97,10 @@
     font-weight: 500;
     letter-spacing: 0.1em;
     color: var(--red);
+  }
+
+  .n-checkbox__label {
+    font-weight: 500;
   }
 }
 

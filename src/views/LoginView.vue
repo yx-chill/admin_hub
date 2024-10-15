@@ -2,7 +2,7 @@
 import { NTabs, NTabPane } from 'naive-ui'
 import LoginForm from '@/components/Form/LoginForm.vue'
 import RegisterForm from '@/components/Form/RegisterForm.vue'
-import ForgetForm from '@/components/Form/ForgetForm.vue'
+import ForgotForm from '@/components/Form/ForgotForm.vue'
 
 // https://spike-vue-free.netlify.app/
 </script>
@@ -27,7 +27,7 @@ import ForgetForm from '@/components/Form/ForgetForm.vue'
           </NTabPane>
 
           <NTabPane name="forget" tab="忘記密碼">
-            <ForgetForm />
+            <ForgotForm />
           </NTabPane>
         </NTabs>
       </div>

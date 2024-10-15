@@ -1,10 +1,17 @@
 <script setup>
+import { onMounted, ref, watch } from 'vue'
 import { NConfigProvider, darkTheme } from 'naive-ui'
 import { useDark } from '@vueuse/core'
-import { ref, watch } from 'vue'
+import { getUser, logout } from '@/api/auth'
+import { useAuthStore } from '@/stores/auth'
+import { useRouter } from 'vue-router'
 
+// 網站樣式主題(dark/light)
 const theme = ref(null)
 const isDark = useDark()
+
+const authStore = useAuthStore()
+const router = useRouter()
 
 watch(
   isDark,
@@ -13,6 +20,25 @@ watch(
   },
   { immediate: true }
 )
+
+onMounted(async () => {
+  // 先取使用者資訊，若有登入將資料存在pinia
+  try {
+    const res = await getUser()
+    if (res.status === 200) {
+      authStore.setUser(res.data)
+    }
+  } catch (error) {
+    if (error.response && error.response.status === 401) {
+      // 若回傳401則登出，導到登入頁
+      await logout()
+      authStore.clearUser()
+      router.push({ name: 'Login' })
+    }
+  } finally {
+    authStore.setLoading(false)
+  }
+})
 </script>
 
 <template>

@@ -1,7 +1,11 @@
 <script setup>
 import { NForm, NFormItem, NInput, NAutoComplete, NButton } from 'naive-ui'
 import { ref, computed } from 'vue'
+import { useRoute } from 'vue-router'
 
+const route = useRoute()
+const { token } = route.params
+const { email } = route.query
 const rPasswordFormItemRef = ref(null)
 const emailList = [
   '@gmail.com',
@@ -15,33 +19,15 @@ const emailList = [
 const formRef = ref(null)
 // formValue
 const formValue = ref({
-  account: '',
-  name: '',
-  email: '',
+  email,
   password: '',
   password_confirmation: ''
 })
 // rules
 const rules = {
-  account: {
-    required: true,
-    message: '請輸入帳號',
-    trigger: ['input', 'blur']
-  },
-  name: {
-    required: true,
-    message: '請輸入姓名',
-    trigger: ['input', 'blur']
-  },
   email: {
     required: true,
-    validator(rule, value) {
-      if (!value) {
-        return new Error('請輸入Email')
-      } else if (!/^[a-zA-Z0-9+._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(value)) {
-        return new Error('Email格式錯誤')
-      }
-    },
+    message: '請輸入信箱',
     trigger: ['change', 'blur']
   },
   password: {
@@ -84,8 +70,7 @@ const handleValidateButtonClick = (e) => {
   formRef.value?.validate((errors) => {
     if (!errors) {
       const body = {
-        account: formValue.value.account,
-        name: formValue.value.name,
+        token,
         email: formValue.value.email,
         password: formValue.value.password,
         password_confirmation: formValue.value.password_confirmation
@@ -93,7 +78,7 @@ const handleValidateButtonClick = (e) => {
 
       console.log(body)
     } else {
-      const target = document.querySelector(`.register-form .${errors[0][0]?.field} input`)
+      const target = document.querySelector(`.reset-form .${errors[0][0]?.field} input`)
 
       if (target) {
         target.scrollIntoView({ behavior: 'smooth' })
@@ -123,31 +108,36 @@ function validatePasswordStartWith(rule, value) {
 function validatePasswordSame(rule, value) {
   return value === formValue.value.password
 }
+
+function reset() {
+  formValue.value = {
+    email: '',
+    password: '',
+    password_confirmation: ''
+  }
+}
 </script>
 
 <template>
   <NForm
     ref="formRef"
-    class="register-form login-form"
+    class="reset-form login-form"
     inline
     :model="formValue"
     :rules="rules"
     size="large"
     @keyup.enter="handleValidateButtonClick"
   >
-    <NFormItem label="帳號" class="account form-item" path="account">
-      <NInput v-model:value="formValue.account" placeholder="Account" />
-    </NFormItem>
-
-    <NFormItem label="姓名" class="name form-item" path="name">
-      <NInput v-model:value="formValue.name" placeholder="Name" />
-    </NFormItem>
-
     <NFormItem label="Email" class="email form-item" path="email">
-      <NAutoComplete v-model:value="formValue.email" :options="emailOptions" placeholder="Email" />
+      <NAutoComplete
+        v-model:value="formValue.email"
+        :options="emailOptions"
+        placeholder="Email"
+        disabled
+      />
     </NFormItem>
 
-    <NFormItem label="密碼" class="password form-item" path="password">
+    <NFormItem label="新密碼" class="password form-item" path="password">
       <NInput
         type="password"
         show-password-on="mousedown"
@@ -177,7 +167,7 @@ function validatePasswordSame(rule, value) {
   </NForm>
 
   <NButton type="primary" class="btn-form" ghost block strong @click="handleValidateButtonClick">
-    註冊
+    送出
   </NButton>
 </template>
 
