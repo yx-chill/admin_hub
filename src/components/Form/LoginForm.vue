@@ -40,19 +40,9 @@ const handleLogin = async (data) => {
   try {
     pending.value = true
     const res = await login(data)
-
-    switch (res.status) {
-      case 200:
-        authStore.setUser(res.data)
-        await router.push({ name: 'index' })
-        showMsg.success(`歡迎 ${res.data.name}`)
-        break
-      case 400:
-        showMsg.error(res.data?.message || '請求錯誤')
-        break
-      default:
-        showMsg.error('登入失敗，請稍後再試')
-    }
+    authStore.setUser(res)
+    await router.push({ name: 'index' })
+    showMsg.success(`歡迎 ${res.name}`)
   } catch (error) {
     showMsg.error('登入失敗，請稍後再試')
   } finally {

@@ -24,17 +24,10 @@ watch(
 onMounted(async () => {
   // 先取使用者資訊，若有登入將資料存在pinia
   try {
-    const res = await getUser()
-    if (res.status === 200) {
-      authStore.setUser(res.data)
-    }
+    const userData = await getUser()
+    authStore.setUser(userData)
   } catch (error) {
-    if (error.response && error.response.status === 401) {
-      // 若回傳401則登出，導到登入頁
-      await logout()
-      authStore.clearUser()
-      router.push({ name: 'Login' })
-    }
+    console.error('Fetch user info error:', error)
   } finally {
     authStore.setLoading(false)
   }
