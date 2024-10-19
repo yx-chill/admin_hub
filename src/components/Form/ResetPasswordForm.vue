@@ -1,12 +1,15 @@
 <script setup>
-import { NForm, NFormItem, NInput, NAutoComplete, NButton } from 'naive-ui'
 import { ref, computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
+import { NSpin, NForm, NFormItem, NInput, NAutoComplete, NButton } from 'naive-ui'
+
+import { resetPassword } from '@/api/auth'
+import { successMsg } from '@/composables/useMessage'
 
 const route = useRoute()
+const router = useRouter()
 const { token } = route.params
 const { email } = route.query
-const rPasswordFormItemRef = ref(null)
 const emailList = [
   '@gmail.com',
   '@yahoo.com.tw',
@@ -15,6 +18,9 @@ const emailList = [
   '@msn.com',
   '@pchome.com.tw'
 ]
+const pending = ref(false)
+const passwordRef = ref(null)
+const rPasswordFormItemRef = ref(null)
 // formRef
 const formRef = ref(null)
 // formValue
@@ -25,11 +31,6 @@ const formValue = ref({
 })
 // rules
 const rules = {
-  email: {
-    required: true,
-    message: '請輸入信箱',
-    trigger: ['change', 'blur']
-  },
   password: {
     required: true,
     message: '請輸入密碼',
@@ -64,31 +65,47 @@ const emailOptions = computed(() => {
   })
 })
 
+const handleRestPassword = async (data) => {
+  try {
+    pending.value = true
+    const res = await resetPassword(data)
+    successMsg(res.message)
+    await router.push({ name: 'Login' })
+  } catch (error) {
+    console.log('error', error)
+    reset()
+    passwordRef.value?.focus()
+  } finally {
+    pending.value = false
+  }
+}
+
 const handleValidateButtonClick = (e) => {
   e.preventDefault()
+  if (pending.value) return
 
-  formRef.value?.validate((errors) => {
+  formRef.value?.validate(async (errors) => {
     if (!errors) {
-      const body = {
+      await handleRestPassword({
         token,
         email: formValue.value.email,
         password: formValue.value.password,
         password_confirmation: formValue.value.password_confirmation
-      }
-
-      console.log(body)
+      })
     } else {
-      const target = document.querySelector(`.reset-form .${errors[0][0]?.field} input`)
-
-      if (target) {
-        target.scrollIntoView({ behavior: 'smooth' })
-
-        setTimeout(() => {
-          target.focus()
-        }, 100)
-      }
+      scrollAndFocusToError(errors)
     }
   })
+}
+
+function scrollAndFocusToError(errors) {
+  const target = document.querySelector(`.reset-form .${errors[0][0]?.field} input`)
+
+  if (target) {
+    target.scrollIntoView({ behavior: 'smooth' })
+
+    setTimeout(() => target.focus(), 100)
+  }
 }
 
 function handlePasswordInput() {
@@ -111,7 +128,7 @@ function validatePasswordSame(rule, value) {
 
 function reset() {
   formValue.value = {
-    email: '',
+    email,
     password: '',
     password_confirmation: ''
   }
@@ -119,56 +136,59 @@ function reset() {
 </script>
 
 <template>
-  <NForm
-    ref="formRef"
-    class="reset-form login-form"
-    inline
-    :model="formValue"
-    :rules="rules"
-    size="large"
-    @keyup.enter="handleValidateButtonClick"
-  >
-    <NFormItem label="Email" class="email form-item" path="email">
-      <NAutoComplete
-        v-model:value="formValue.email"
-        :options="emailOptions"
-        placeholder="Email"
-        disabled
-      />
-    </NFormItem>
-
-    <NFormItem label="新密碼" class="password form-item" path="password">
-      <NInput
-        type="password"
-        show-password-on="mousedown"
-        v-model:value="formValue.password"
-        placeholder="Password"
-        @input="handlePasswordInput"
-        @keydown.enter.prevent
-      />
-    </NFormItem>
-
-    <NFormItem
-      ref="rPasswordFormItemRef"
-      first
-      label="確認密碼"
-      class="password_confirmation form-item"
-      path="password_confirmation"
+  <NSpin :show="pending" size="mediunm" stroke="4a90e2">
+    <NForm
+      ref="formRef"
+      class="reset-form login-form"
+      inline
+      :model="formValue"
+      :rules="rules"
+      size="large"
+      @keyup.enter="handleValidateButtonClick"
     >
-      <NInput
-        type="password"
-        show-password-on="mousedown"
-        v-model:value="formValue.password_confirmation"
-        placeholder="Reenter Password"
-        :disabled="!formValue.password"
-        @keydown.enter.prevent
-      />
-    </NFormItem>
-  </NForm>
+      <NFormItem label="Email" class="email form-item" path="email">
+        <NAutoComplete
+          v-model:value="formValue.email"
+          :options="emailOptions"
+          placeholder="Email"
+          disabled
+        />
+      </NFormItem>
 
-  <NButton type="primary" class="btn-form" ghost block strong @click="handleValidateButtonClick">
-    送出
-  </NButton>
+      <NFormItem label="新密碼" class="password form-item" path="password">
+        <NInput
+          ref="passwordRef"
+          type="password"
+          show-password-on="mousedown"
+          v-model:value="formValue.password"
+          placeholder="Password"
+          @input="handlePasswordInput"
+          @keydown.enter.prevent
+        />
+      </NFormItem>
+
+      <NFormItem
+        ref="rPasswordFormItemRef"
+        first
+        label="確認密碼"
+        class="password_confirmation form-item"
+        path="password_confirmation"
+      >
+        <NInput
+          type="password"
+          show-password-on="mousedown"
+          v-model:value="formValue.password_confirmation"
+          placeholder="Reenter Password"
+          :disabled="!formValue.password"
+          @keydown.enter.prevent
+        />
+      </NFormItem>
+    </NForm>
+
+    <NButton type="primary" class="btn-form" ghost block strong @click="handleValidateButtonClick">
+      送出
+    </NButton>
+  </NSpin>
 </template>
 
 <style lang="scss" scoped></style>

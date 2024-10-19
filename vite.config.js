@@ -6,7 +6,7 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: '/admin/',
+  base: '/',
   plugins: [
     vue(),
     vueDevTools(),
@@ -37,5 +37,15 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/api/, '')
       }
     }
-  }
+  },
+  build: {
+    // outDir: 'dist', // 更改輸出目錄
+    rollupOptions: {
+      output: {
+        assetFileNames: 'adminhub/admin_assets/[name]-[hash][extname]', // 更改 assets 文件路徑
+        chunkFileNames: 'adminhub/admin_assets/[name]-[hash].js', // 更改 chunk 文件路徑
+        entryFileNames: 'adminhub/admin_assets/[name]-[hash].js', // 更改入口文件路徑
+      },
+    },
+  },
 })

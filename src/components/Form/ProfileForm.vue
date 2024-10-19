@@ -1,14 +1,18 @@
 <script setup>
-import { NForm, NFormItem, NInput, NAutoComplete, NButton } from 'naive-ui'
 import { ref, computed } from 'vue'
+import { NForm, NFormItem, NInput, NAutoComplete, NButton } from 'naive-ui'
+import { storeToRefs } from 'pinia'
+import { useAuthStore } from '@/stores/auth'
 
+const authStore = useAuthStore()
+const { user } = storeToRefs(authStore)
 // formRef
 const formRef = ref(null)
 // formValue
 const formValue = ref({
-  account: '',
-  name: '',
-  email: '',
+  account: user.value.account || '',
+  name: user.value.name || '',
+  email: user.value.email || '',
   password: '',
   password_comfirmation: ''
 })

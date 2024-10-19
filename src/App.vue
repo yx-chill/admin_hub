@@ -2,16 +2,14 @@
 import { onMounted, ref, watch } from 'vue'
 import { NConfigProvider, darkTheme } from 'naive-ui'
 import { useDark } from '@vueuse/core'
-import { getUser, logout } from '@/api/auth'
+import { getUser } from '@/api/auth'
 import { useAuthStore } from '@/stores/auth'
-import { useRouter } from 'vue-router'
 
 // 網站樣式主題(dark/light)
 const theme = ref(null)
 const isDark = useDark()
 
 const authStore = useAuthStore()
-const router = useRouter()
 
 watch(
   isDark,
@@ -27,7 +25,7 @@ onMounted(async () => {
     const userData = await getUser()
     authStore.setUser(userData)
   } catch (error) {
-    console.error('Fetch user info error:', error)
+    /* empty */
   } finally {
     authStore.setLoading(false)
   }

@@ -1,7 +1,10 @@
 <script setup>
-import { NForm, NFormItem, NAutoComplete, NButton } from 'naive-ui'
 import { ref, computed } from 'vue'
+import { NSpin, NForm, NFormItem, NAutoComplete, NButton } from 'naive-ui'
+import { forgotPassword } from '@/api/auth'
+import { successMsg } from '@/composables/useMessage'
 
+const pending = ref(false)
 const emailList = [
   '@gmail.com',
   '@yahoo.com.tw',
@@ -41,53 +44,71 @@ const emailOptions = computed(() => {
   })
 })
 
+const handleForgot = async (data) => {
+  pending.value = true
+  const res = await forgotPassword(data)
+  successMsg(res.message)
+
+  reset()
+  pending.value = false
+}
+
 const handleValidateButtonClick = (e) => {
   e.preventDefault()
+  if (pending.value) return
 
-  formRef.value?.validate((errors) => {
+  formRef.value?.validate(async (errors) => {
     if (!errors) {
-      const body = {
+      await handleForgot({
         email: formValue.value.email
-      }
-
-      console.log(body)
+      })
     } else {
-      const target = document.querySelector(`.forgot-form .${errors[0][0]?.field} input`)
-
-      if (target) {
-        target.scrollIntoView({ behavior: 'smooth' })
-
-        setTimeout(() => {
-          target.focus()
-        }, 100)
-      }
+      scrollAndFocusToError(errors)
     }
   })
+}
+
+function scrollAndFocusToError(errors) {
+  const target = document.querySelector(`.forgot-form .${errors[0][0]?.field} input`)
+
+  if (target) {
+    target.scrollIntoView({ behavior: 'smooth' })
+
+    setTimeout(() => target.focus(), 100)
+  }
+}
+
+function reset() {
+  formValue.value = {
+    email: ''
+  }
 }
 </script>
 
 <template>
-  <NForm
-    ref="formRef"
-    class="forgot-form login-form"
-    inline
-    :model="formValue"
-    :rules="rules"
-    size="large"
-    @keyup.enter="handleValidateButtonClick"
-  >
-    <NFormItem label="Email" class="email form-item" path="email">
-      <NAutoComplete
-        v-model:value="formValue.email"
-        :options="emailOptions"
-        placeholder="mail@example.com"
-      />
-    </NFormItem>
-  </NForm>
+  <NSpin :show="pending" size="medium" stroke="4a90e2">
+    <NForm
+      ref="formRef"
+      class="forgot-form login-form"
+      inline
+      :model="formValue"
+      :rules="rules"
+      size="large"
+      @keyup.enter="handleValidateButtonClick"
+    >
+      <NFormItem label="Email" class="email form-item" path="email">
+        <NAutoComplete
+          v-model:value="formValue.email"
+          :options="emailOptions"
+          placeholder="mail@example.com"
+        />
+      </NFormItem>
+    </NForm>
 
-  <NButton type="primary" class="btn-form" ghost block strong @click="handleValidateButtonClick">
-    送出
-  </NButton>
+    <NButton type="primary" class="btn-form" ghost block strong @click="handleValidateButtonClick">
+      送出
+    </NButton>
+  </NSpin>
 </template>
 
 <style lang="scss" scoped></style>

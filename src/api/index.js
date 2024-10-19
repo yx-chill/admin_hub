@@ -1,12 +1,23 @@
 import axios from 'axios'
-import { useRouter } from 'vue-router'
-import { createDiscreteApi } from 'naive-ui'
 import { logout } from '@/api/auth'
 import { useAuthStore } from '@/stores/auth'
+import { errorMsg } from '@/composables/useMessage'
 
-const { message: showMsg } = createDiscreteApi(['message'], {
-  messageProviderProps: { placement: 'bottom-right', duration: 5000 }
-})
+let isLoggingOut = false
+
+const handleLogout = async () => {
+  if (isLoggingOut) return
+  isLoggingOut = true
+  const authStore = useAuthStore()
+
+  try {
+    await logout()
+  } finally {
+    isLoggingOut = false
+    authStore.clearUser()
+  }
+}
+
 
 const createAxiosInstance = () => {
   axios.defaults.withCredentials = true
@@ -14,14 +25,14 @@ const createAxiosInstance = () => {
 
   // axios 實例
   const instance = axios.create({
-    baseURL: '/api',
+    baseURL: import.meta.env.VITE_API_URL,
     timeout: 10000,
     headers: {
       'accept': 'application/json;charset=UTF-8;',
     },
     withCredentials: true, // 跨域請求時發送cookie
     withXSRFToken: true,
-    validateStatus: () => true
+    // validateStatus: () => true
   })
 
   // 攔截器
@@ -48,45 +59,32 @@ const createAxiosInstance = () => {
   }, async (error) => {
     // 請求失敗
     if (error.response) {
-      const { status } = error.response
 
-      switch (status) {
+      switch (error.response.status) {
         case 401:
         case 419:
-          await handleLogout()
+          if (!error.config.url.includes('/logout')) {
+            await handleLogout()
+          }
           break
         case 400:
         case 403:
         case 429:
         case 500:
-          showMsg.error(error.response?.data?.message || '請求錯誤')
+          errorMsg(error.response?.data?.message || '請求錯誤')
           break
         default:
-          showMsg.error('發生未知錯誤')
+          errorMsg('發生未知錯誤')
       }
     } else if (error.request) {
-      showMsg.error('無法連線到伺服器')
+      errorMsg('無法連線到伺服器')
     } else {
-      showMsg.error('發生錯誤，請稍後再試')
+      errorMsg('發生錯誤，請稍後再試')
     }
-    return Promise.reject(error);
+    return Promise.reject(error)
   })
 
   return instance
-}
-
-async function handleLogout() {
-  const router = useRouter()
-  const authStore = useAuthStore()
-
-  try {
-    await logout()
-  } catch (error) {
-    console.error('Logout failed:', error)
-  } finally {
-    authStore.clearUser()
-    await router.push({ name: 'Login' })
-  }
 }
 
 export default createAxiosInstance()

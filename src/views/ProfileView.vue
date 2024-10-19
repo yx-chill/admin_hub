@@ -1,7 +1,47 @@
 <script setup>
+import { ref } from 'vue'
+import { storeToRefs } from 'pinia'
 import { NAvatar, NTabs, NTabPane } from 'naive-ui'
+import { Cropper } from 'vue-advanced-cropper'
+
+import { useAuthStore } from '@/stores/auth'
 import { Icon } from '@iconify/vue'
 import ProfileForm from '@/components/Form/ProfileForm.vue'
+import 'vue-advanced-cropper/dist/style.css'
+
+const authStore = useAuthStore()
+const { user } = storeToRefs(authStore)
+
+const avatarUrl = ref('')
+const imageUrl = ref('')
+const showCropper = ref(false)
+const cropper = ref(null)
+
+const openCropper = () => {
+  showCropper.value = true
+}
+
+const onFileChange = (event) => {
+  const file = event.target.files[0]
+  imageUrl.value = URL.createObjectURL(file)
+}
+
+const onChange = (cropper) => {
+  cropper.value = cropper
+}
+
+const cropImage = () => {
+  const { coordinates, canvas } = cropper.value.getResult()
+  avatarUrl.value = canvas.toDataURL()
+  showCropper.value = false
+  // 這裡可以調用 API 來更新頭像
+  updateAvatarAPI(canvas.toDataURL())
+}
+
+const updateAvatarAPI = (dataUrl) => {
+  // 實現 API 調用邏輯
+  console.log('Updating avatar with:', dataUrl)
+}
 </script>
 
 <template>
@@ -12,12 +52,7 @@ import ProfileForm from '@/components/Form/ProfileForm.vue'
       <div class="profile-body">
         <div class="avatar">
           <div class="img">
-            <NAvatar
-              v-if="1"
-              round
-              size="100"
-              src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
-            />
+            <NAvatar v-if="user.avatar" round size="100" :src="user.avatar" />
             <Icon v-else icon="lineicons:user" />
           </div>
 
@@ -26,21 +61,38 @@ import ProfileForm from '@/components/Form/ProfileForm.vue'
           </button>
         </div>
 
-        <p class="user-name">User Name</p>
+        <p class="user-name">{{ user.name }}</p>
 
         <div class="user-info">
           <div class="info">
             <p class="account">
-              user_account
+              {{ user.account }}
               <span class="tag">管理員</span>
             </p>
             <p class="email">
               <Icon icon="si:mail-duotone" />
-              example@mail.com
+              {{ user.email }}
             </p>
           </div>
           <div class="links"></div>
         </div>
+      </div>
+    </section>
+
+    <section class="block">
+      <Cropper
+        v-if="imageUrl"
+        class="cropper"
+        :src="imageUrl"
+        :stencil-props="{
+          aspectRatio: 1
+        }"
+        @change="onChange"
+      />
+      <div class="buttons">
+        <input type="file" @change="onFileChange" accept="image/*" />
+        <button @click="cropImage">確認裁切</button>
+        <button @click="showCropper = false">取消</button>
       </div>
     </section>
 
@@ -207,11 +259,11 @@ import ProfileForm from '@/components/Form/ProfileForm.vue'
 
       svg {
         flex-shrink: 0;
-        transform: translateY(2px);
+        // transform: translateY(2px);
 
-        @include xs {
-          transform: translateY(1px);
-        }
+        // @include xs {
+        //   transform: translateY(1px);
+        // }
       }
     }
 
@@ -240,7 +292,7 @@ import ProfileForm from '@/components/Form/ProfileForm.vue'
       color: var(--color);
       border-radius: 50px;
       border: 1px solid var(--color);
-      padding: 2px 6px 3px;
+      padding: 4px 6px 2px;
     }
   }
 }

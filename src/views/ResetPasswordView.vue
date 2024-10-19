@@ -20,7 +20,7 @@ import ResetPasswordForm from '@/components/Form/ResetPasswordForm.vue'
         </NTabs>
 
         <div class="links">
-          <RouterLink to="/login">我要登入</RouterLink>
+          <RouterLink :to="{ name: 'Login' }">我要登入</RouterLink>
         </div>
       </div>
     </section>

@@ -12,10 +12,11 @@ import { Icon } from '@iconify/vue'
 import WebLogo from '@/components/WebLogo.vue'
 
 const menuRef = ref(null)
-const state = useStateStore()
-const { menuState } = storeToRefs(state)
+const stateStore = useStateStore()
+const { menuState } = storeToRefs(stateStore)
 
 const authStore = useAuthStore()
+const { user } = storeToRefs(authStore)
 const router = useRouter()
 
 onClickOutside(menuRef, () => {
@@ -24,8 +25,9 @@ onClickOutside(menuRef, () => {
 
 const handleLogout = async () => {
   await logout()
+  user.value.id = ''
+  await router.push({ name: 'Login' })
   authStore.clearUser()
-  router.push({ name: 'Login' })
 }
 </script>
 

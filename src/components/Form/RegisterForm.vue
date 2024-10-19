@@ -1,6 +1,10 @@
 <script setup>
-import { NForm, NFormItem, NInput, NAutoComplete, NButton } from 'naive-ui'
 import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
+import { NSpin, NForm, NFormItem, NInput, NAutoComplete, NButton } from 'naive-ui'
+import { useAuthStore } from '@/stores/auth'
+import { register } from '@/api/auth'
+import { successMsg, errorMsg } from '@/composables/useMessage'
 
 const rPasswordFormItemRef = ref(null)
 const emailList = [
@@ -11,6 +15,9 @@ const emailList = [
   '@msn.com',
   '@pchome.com.tw'
 ]
+const pending = ref(false)
+const router = useRouter()
+const authStore = useAuthStore()
 // formRef
 const formRef = ref(null)
 // formValue
@@ -78,32 +85,47 @@ const emailOptions = computed(() => {
   })
 })
 
+const handleRegister = async (data) => {
+  try {
+    pending.value = true
+    const res = await register(data)
+    authStore.setUser(res)
+    await router.push({ name: 'index' })
+    successMsg(`註冊成功！ 歡迎 ${res.name}，請先完成信箱驗證`)
+  } catch (error) {
+    errorMsg(error)
+  } finally {
+    pending.value = false
+  }
+}
+
 const handleValidateButtonClick = (e) => {
   e.preventDefault()
+  if (pending.value) return
 
-  formRef.value?.validate((errors) => {
+  formRef.value?.validate(async (errors) => {
     if (!errors) {
-      const body = {
+      await handleRegister({
         account: formValue.value.account,
         name: formValue.value.name,
         email: formValue.value.email,
         password: formValue.value.password,
         password_confirmation: formValue.value.password_confirmation
-      }
-
-      console.log(body)
+      })
     } else {
-      const target = document.querySelector(`.register-form .${errors[0][0]?.field} input`)
-
-      if (target) {
-        target.scrollIntoView({ behavior: 'smooth' })
-
-        setTimeout(() => {
-          target.focus()
-        }, 100)
-      }
+      scrollAndFocusToError(errors)
     }
   })
+}
+
+function scrollAndFocusToError(errors) {
+  const target = document.querySelector(`.register-form .${errors[0][0]?.field} input`)
+
+  if (target) {
+    target.scrollIntoView({ behavior: 'smooth' })
+
+    setTimeout(() => target.focus(), 100)
+  }
 }
 
 function handlePasswordInput() {
@@ -126,59 +148,65 @@ function validatePasswordSame(rule, value) {
 </script>
 
 <template>
-  <NForm
-    ref="formRef"
-    class="register-form login-form"
-    inline
-    :model="formValue"
-    :rules="rules"
-    size="large"
-    @keyup.enter="handleValidateButtonClick"
-  >
-    <NFormItem label="帳號" class="account form-item" path="account">
-      <NInput v-model:value="formValue.account" placeholder="Account" />
-    </NFormItem>
-
-    <NFormItem label="姓名" class="name form-item" path="name">
-      <NInput v-model:value="formValue.name" placeholder="Name" />
-    </NFormItem>
-
-    <NFormItem label="Email" class="email form-item" path="email">
-      <NAutoComplete v-model:value="formValue.email" :options="emailOptions" placeholder="Email" />
-    </NFormItem>
-
-    <NFormItem label="密碼" class="password form-item" path="password">
-      <NInput
-        type="password"
-        show-password-on="mousedown"
-        v-model:value="formValue.password"
-        placeholder="Password"
-        @input="handlePasswordInput"
-        @keydown.enter.prevent
-      />
-    </NFormItem>
-
-    <NFormItem
-      ref="rPasswordFormItemRef"
-      first
-      label="確認密碼"
-      class="password_confirmation form-item"
-      path="password_confirmation"
+  <NSpin :show="pending" size="medium" stroke="4a90e2">
+    <NForm
+      ref="formRef"
+      class="register-form login-form"
+      inline
+      :model="formValue"
+      :rules="rules"
+      size="large"
+      @keyup.enter="handleValidateButtonClick"
     >
-      <NInput
-        type="password"
-        show-password-on="mousedown"
-        v-model:value="formValue.password_confirmation"
-        placeholder="Reenter Password"
-        :disabled="!formValue.password"
-        @keydown.enter.prevent
-      />
-    </NFormItem>
-  </NForm>
+      <NFormItem label="帳號" class="account form-item" path="account">
+        <NInput v-model:value="formValue.account" placeholder="Account" />
+      </NFormItem>
 
-  <NButton type="primary" class="btn-form" ghost block strong @click="handleValidateButtonClick">
-    註冊
-  </NButton>
+      <NFormItem label="姓名" class="name form-item" path="name">
+        <NInput v-model:value="formValue.name" placeholder="Name" />
+      </NFormItem>
+
+      <NFormItem label="Email" class="email form-item" path="email">
+        <NAutoComplete
+          v-model:value="formValue.email"
+          :options="emailOptions"
+          placeholder="Email"
+        />
+      </NFormItem>
+
+      <NFormItem label="密碼" class="password form-item" path="password">
+        <NInput
+          type="password"
+          show-password-on="mousedown"
+          v-model:value="formValue.password"
+          placeholder="Password"
+          @input="handlePasswordInput"
+          @keydown.enter.prevent
+        />
+      </NFormItem>
+
+      <NFormItem
+        ref="rPasswordFormItemRef"
+        first
+        label="確認密碼"
+        class="password_confirmation form-item"
+        path="password_confirmation"
+      >
+        <NInput
+          type="password"
+          show-password-on="mousedown"
+          v-model:value="formValue.password_confirmation"
+          placeholder="Reenter Password"
+          :disabled="!formValue.password"
+          @keydown.enter.prevent
+        />
+      </NFormItem>
+    </NForm>
+
+    <NButton type="primary" class="btn-form" ghost block strong @click="handleValidateButtonClick">
+      註冊
+    </NButton>
+  </NSpin>
 </template>
 
 <style lang="scss" scoped></style>

@@ -1,14 +1,11 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { createDiscreteApi, NSpin, NForm, NFormItem, NInput, NCheckbox, NButton } from 'naive-ui'
+import { NSpin, NForm, NFormItem, NInput, NCheckbox, NButton } from 'naive-ui'
 
 import { useAuthStore } from '@/stores/auth'
 import { login } from '@/api/auth'
-
-const { message: showMsg } = createDiscreteApi(['message'], {
-  messageProviderProps: { placement: 'bottom-right', duration: 5000 }
-})
+import { successMsg } from '@/composables/useMessage'
 
 const accountRef = ref(null)
 const pending = ref(false)
@@ -37,19 +34,16 @@ const rules = {
 }
 
 const handleLogin = async (data) => {
-  try {
-    pending.value = true
-    const res = await login(data)
-    authStore.setUser(res)
-    await router.push({ name: 'index' })
-    showMsg.success(`歡迎 ${res.name}`)
-  } catch (error) {
-    showMsg.error('登入失敗，請稍後再試')
-  } finally {
-    reset()
-    pending.value = false
-    accountRef.value?.focus()
-  }
+  pending.value = true
+
+  const res = await login(data)
+  authStore.setUser(res)
+  await router.push({ name: 'index' })
+  successMsg(`歡迎 ${res.name}`)
+
+  reset()
+  pending.value = false
+  accountRef.value?.focus()
 }
 
 const handleValidateButtonClick = (e) => {

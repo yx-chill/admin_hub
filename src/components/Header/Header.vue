@@ -27,8 +27,8 @@ const toggleMenu = useToggle(menuState)
     <div class="flex">
       <BtnColorScheme />
 
-      <RouterLink v-if="isAuthenticated" class="link-profile" to="/profile" title="You">
-        <NAvatar v-if="user.avatar" round size="36" src="user.avatar" />
+      <RouterLink v-if="isAuthenticated" class="link-profile" :to="{ name: 'Profile' }" title="You">
+        <NAvatar v-if="user.avatar" round size="36" :src="user.avatar" />
         <Icon v-else icon="lineicons:user" />
       </RouterLink>
     </div>

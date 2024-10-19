@@ -13,60 +13,96 @@ import LoginView from '@/views/LoginView.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    // -- 未登入 --
-    { // 登入
-      path: '/login',
-      name: 'Login',
-      meta: { layout: LoginLayout },
-      component: LoginView
-    },
-    { // 重設密碼
-      path: '/reset-password/:token',
-      name: 'Reset',
-      meta: { layout: LoginLayout },
-      component: () => import('../views/ResetPasswordView.vue'),
-      beforeEnter: (to) => {
-        // 必須帶email若沒有帶email則導回登入頁
-        const { email } = to.query
+    {
+      path: '/admin',
+      children: [
+        // -- 未登入 --
+        { // 登入
+          path: 'login',
+          name: 'Login',
+          meta: {
+            layout: LoginLayout,
+            requireAuth: false
+          },
+          component: LoginView
+        },
+        { // 重設密碼
+          path: 'reset-password/:token',
+          name: 'Reset',
+          meta: {
+            layout: LoginLayout,
+            requireAuth: false
+          },
+          component: () => import('@/views/ResetPasswordView.vue'),
+          beforeEnter: (to) => {
+            // 必須帶email若沒有帶email則導回登入頁
+            const { email } = to.query
 
-        if (!email) {
-          return { name: 'Login' }
+            if (!email) {
+              return { name: 'Login' }
+            }
+          },
+        },
+        // -- 有登入 --
+        { // 首頁
+          path: '',
+          name: 'index',
+          meta: {
+            layout: ManagerLayout,
+            requireAuth: true
+          },
+          component: () => import('@/views/ManagerView.vue')
+        },
+        {
+          path: 'about',
+          name: 'about',
+          meta: {
+            layout: ManagerLayout,
+            requireAuth: true
+          },
+          // route level code-splitting
+          // this generates a separate chunk (About.[hash].js) for this route
+          // which is lazy-loaded when the route is visited.
+          component: () => import('@/views/AboutView.vue')
+        },
+        { // 信箱驗證
+          path: 'email/verify',
+          name: 'EmailVerify',
+          meta: {
+            layout: ManagerLayout,
+            requireAuth: true
+          },
+          component: () => import('@/views/EmailVerifyView.vue'),
+          beforeEnter: () => {
+            const authStore = useAuthStore()
+            const { user } = storeToRefs(authStore)
+
+            if (user.value?.email_verified_at) {
+              return { name: 'index' }
+            }
+          },
+        },
+        { // 個人資料
+          path: 'profile',
+          name: 'Profile',
+          meta: {
+            layout: ManagerLayout,
+            requireAuth: true
+          },
+          component: () => import('@/views/ProfileView.vue')
+        },
+        {
+          path: '/:catchAll(.*)*',
+          redirect: {
+            name: 'index',
+          },
         }
-      },
-    },
-    // -- 有登入 --
-    { // 首頁
-      path: '/',
-      name: 'index',
-      meta: { layout: ManagerLayout },
-      component: () => import('../views/ManagerView.vue')
-    },
-    {
-      path: '/about',
-      name: 'about',
-      meta: { layout: ManagerLayout },
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue')
-    },
-    { // 個人資料
-      path: '/profile',
-      name: 'Profile',
-      meta: { layout: ManagerLayout },
-      component: () => import('../views/ProfileView.vue')
-    },
-    {
-      path: '/:catchAll(.*)*',
-      redirect: {
-        name: 'index',
-      },
+      ]
     }
   ]
 })
 
 // 不須登入的頁面
-const pages = ['Login', 'Reset']
 
 router.beforeEach(async (to) => {
   const authStore = useAuthStore()
@@ -81,17 +117,17 @@ router.beforeEach(async (to) => {
   // 檢查是否已登入
   if (!isAuthenticated.value) {
     // ❗️ 避免無限重定向
-    if (!pages.includes(to.name)) {
+    if (to.meta.requireAuth) {
       // 未登入且在需登入的頁面則導回登入頁
       return { name: 'Login' }
     }
   } else {
     // 有登入但帳號未驗證則到驗證頁
-    if (user.value?.email_verified_at) {
-      // return { name: 'EmailVerified' }
+    if (!user.value?.email_verified_at && to.name !== 'EmailVerify') {
+      return { name: 'EmailVerify' }
     }
     // 有登入且在不需登入的頁面則導回首頁
-    if (pages.includes(to.name)) {
+    if (!to.meta.requireAuth) {
       return { name: 'index' }
     }
   }
