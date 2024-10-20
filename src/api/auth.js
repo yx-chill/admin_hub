@@ -58,3 +58,13 @@ export const resetPassword = async (data) => {
     data
   })
 }
+
+// 修改個人資訊
+export const changeProfile = async (data, config) => {
+  return await axios({
+    url: '/profile',
+    method: 'post',
+    data,
+    config
+  })
+}

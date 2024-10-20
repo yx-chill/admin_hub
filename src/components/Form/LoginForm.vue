@@ -36,14 +36,17 @@ const rules = {
 const handleLogin = async (data) => {
   pending.value = true
 
-  const res = await login(data)
-  authStore.setUser(res)
-  await router.push({ name: 'index' })
-  successMsg(`歡迎 ${res.name}`)
-
-  reset()
-  pending.value = false
-  accountRef.value?.focus()
+  try {
+    const res = await login(data)
+    authStore.setUser(res)
+    await router.push({ name: 'index' })
+    successMsg(`歡迎 ${res.name}`)
+  } catch (err) {
+    accountRef.value?.focus()
+  } finally {
+    reset()
+    pending.value = false
+  }
 }
 
 const handleValidateButtonClick = (e) => {

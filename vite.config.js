@@ -35,6 +35,11 @@ export default defineConfig({
         target: 'https://adminhub.sally-handmade.com/api/v1/admin',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
+      },
+      '/adminhub/uploads': {
+        target: 'https://adminhub.sally-handmade.com',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/adminhub/, '/adminhub'),
       }
     }
   },

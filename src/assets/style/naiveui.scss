@@ -115,3 +115,14 @@
     letter-spacing: 0.05em;
   }
 }
+
+// modal
+.n-modal-mask {
+  background: var(--backdrop-background);
+  backdrop-filter: blur(2px);
+}
+
+// card
+.n-card {
+  border-radius: var(--block-border-radius);
+}

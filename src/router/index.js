@@ -2,7 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { storeToRefs } from 'pinia'
 
 // store
-import { useAuthStore } from '@/stores/auth';
+import { useAuthStore } from '@/stores/auth'
+import { useStateStore } from '@/stores/state'
 // layout
 import LoginLayout from '@/layouts/LoginLayout.vue'
 import ManagerLayout from '@/layouts/ManagerLayout.vue'
@@ -54,16 +55,13 @@ const router = createRouter({
           component: () => import('@/views/ManagerView.vue')
         },
         {
-          path: 'about',
-          name: 'about',
+          path: 'permission',
+          name: 'Permission',
           meta: {
             layout: ManagerLayout,
             requireAuth: true
           },
-          // route level code-splitting
-          // this generates a separate chunk (About.[hash].js) for this route
-          // which is lazy-loaded when the route is visited.
-          component: () => import('@/views/AboutView.vue')
+          component: () => import('@/views/PermissionView.vue')
         },
         { // 信箱驗證
           path: 'email/verify',
@@ -102,17 +100,19 @@ const router = createRouter({
   ]
 })
 
-// 不須登入的頁面
-
 router.beforeEach(async (to) => {
   const authStore = useAuthStore()
+  const stateStore = useStateStore()
   const { isAuthenticated, isLoading, user } = storeToRefs(authStore)
+  const { menuState } = storeToRefs(stateStore)
 
   // 等待使用者資訊加載完成
   if (isLoading.value) {
     // 可以在這裡顯示一個加載指示器
     await until(() => !isLoading.value)
   }
+
+  menuState.value = false
 
   // 檢查是否已登入
   if (!isAuthenticated.value) {

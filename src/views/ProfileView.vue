@@ -2,46 +2,17 @@
 import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { NAvatar, NTabs, NTabPane } from 'naive-ui'
-import { Cropper } from 'vue-advanced-cropper'
 
-import { useAuthStore } from '@/stores/auth'
 import { Icon } from '@iconify/vue'
+import { useAuthStore } from '@/stores/auth'
+import { useStateStore } from '@/stores/state'
+import CropperComponent from '@/components/Cropper/CropperComponent.vue'
 import ProfileForm from '@/components/Form/ProfileForm.vue'
-import 'vue-advanced-cropper/dist/style.css'
 
 const authStore = useAuthStore()
+const stateStore = useStateStore()
 const { user } = storeToRefs(authStore)
-
-const avatarUrl = ref('')
-const imageUrl = ref('')
-const showCropper = ref(false)
-const cropper = ref(null)
-
-const openCropper = () => {
-  showCropper.value = true
-}
-
-const onFileChange = (event) => {
-  const file = event.target.files[0]
-  imageUrl.value = URL.createObjectURL(file)
-}
-
-const onChange = (cropper) => {
-  cropper.value = cropper
-}
-
-const cropImage = () => {
-  const { coordinates, canvas } = cropper.value.getResult()
-  avatarUrl.value = canvas.toDataURL()
-  showCropper.value = false
-  // 這裡可以調用 API 來更新頭像
-  updateAvatarAPI(canvas.toDataURL())
-}
-
-const updateAvatarAPI = (dataUrl) => {
-  // 實現 API 調用邏輯
-  console.log('Updating avatar with:', dataUrl)
-}
+const { showAvatarCropper } = storeToRefs(stateStore)
 </script>
 
 <template>
@@ -56,7 +27,7 @@ const updateAvatarAPI = (dataUrl) => {
             <Icon v-else icon="lineicons:user" />
           </div>
 
-          <button type="button" class="btn-edit-img">
+          <button type="button" class="btn-edit-img" @click="showAvatarCropper = true">
             <Icon icon="lets-icons:edit-duotone-line" />
           </button>
         </div>
@@ -80,23 +51,6 @@ const updateAvatarAPI = (dataUrl) => {
     </section>
 
     <section class="block">
-      <Cropper
-        v-if="imageUrl"
-        class="cropper"
-        :src="imageUrl"
-        :stencil-props="{
-          aspectRatio: 1
-        }"
-        @change="onChange"
-      />
-      <div class="buttons">
-        <input type="file" @change="onFileChange" accept="image/*" />
-        <button @click="cropImage">確認裁切</button>
-        <button @click="showCropper = false">取消</button>
-      </div>
-    </section>
-
-    <section class="block">
       <NTabs default-value="profile" size="large" class="profile-tabs form-tabs" animated>
         <NTabPane name="profile" tab="資料維護">
           <ProfileForm />
@@ -107,6 +61,8 @@ const updateAvatarAPI = (dataUrl) => {
         </NTabPane>
       </NTabs>
     </section>
+
+    <CropperComponent />
   </main>
 </template>
 

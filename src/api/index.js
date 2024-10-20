@@ -74,7 +74,7 @@ const createAxiosInstance = () => {
           errorMsg(error.response?.data?.message || '請求錯誤')
           break
         default:
-          errorMsg('發生未知錯誤')
+          errorMsg(error.response?.data?.message || '發生未知錯誤')
       }
     } else if (error.request) {
       errorMsg('無法連線到伺服器')

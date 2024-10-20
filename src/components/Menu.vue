@@ -43,19 +43,19 @@ const handleLogout = async () => {
 
         <ul class="links">
           <li>
-            <RouterLink class="link" to="/about">
+            <RouterLink class="link" :to="{ name: 'Profile' }">
               <div class="icon">
-                <Icon icon="lets-icons:shop-duotone" />
+                <Icon icon="fa-solid:user-edit" />
               </div>
-              店家資訊
+              帳號設定
             </RouterLink>
           </li>
           <li>
-            <RouterLink class="link" to="/">
+            <RouterLink class="link" :to="{ name: 'Permission' }">
               <div class="icon">
-                <Icon icon="ic:twotone-table-restaurant" />
+                <Icon icon="uim:lock-access" />
               </div>
-              桌號設定
+              權限管理
             </RouterLink>
           </li>
           <li>
