@@ -1,5 +1,4 @@
 <script setup>
-import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { NAvatar, NTabs, NTabPane } from 'naive-ui'
 
@@ -28,7 +27,7 @@ const { showAvatarCropper } = storeToRefs(stateStore)
           </div>
 
           <button type="button" class="btn-edit-img" @click="showAvatarCropper = true">
-            <Icon icon="lets-icons:edit-duotone-line" />
+            <Icon icon="solar:gallery-edit-broken" />
           </button>
         </div>
 
@@ -149,7 +148,7 @@ const { showAvatarCropper } = storeToRefs(stateStore)
     display: flex;
     justify-content: center;
     align-items: center;
-    color: #fff;
+    color: var(--color-reverse-base);
     background-color: var(--edit-img-background);
     border-radius: 50%;
     border: none;
@@ -158,7 +157,7 @@ const { showAvatarCropper } = storeToRefs(stateStore)
     bottom: 4px;
     z-index: 2;
     transition: 0.3s ease;
-    padding: 8px 7px 8px 9px;
+    padding: 10px;
     opacity: 0;
     pointer-events: none;
 

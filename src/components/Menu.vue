@@ -43,11 +43,11 @@ const handleLogout = async () => {
 
         <ul class="links">
           <li>
-            <RouterLink class="link" :to="{ name: 'Profile' }">
+            <RouterLink class="link" :to="{ name: 'Users' }">
               <div class="icon">
-                <Icon icon="fa-solid:user-edit" />
+                <Icon icon="uim:lock-access" />
               </div>
-              帳號設定
+              <p>帳號管理</p>
             </RouterLink>
           </li>
           <li>
@@ -55,77 +55,45 @@ const handleLogout = async () => {
               <div class="icon">
                 <Icon icon="uim:lock-access" />
               </div>
-              權限管理
+              <p>權限管理</p>
             </RouterLink>
           </li>
           <li>
-            <RouterLink class="link" to="/">
+            <RouterLink class="link" :to="{ name: 'Role' }">
               <div class="icon">
-                <Icon icon="solar:sort-by-time-line-duotone" />
+                <Icon icon="uim:lock-access" />
               </div>
-              訂位控管
-            </RouterLink>
-          </li>
-        </ul>
-      </div>
-
-      <div class="group">
-        <p class="group-title">管理</p>
-
-        <ul class="links">
-          <li>
-            <RouterLink class="link" to="/">
-              <div class="icon">
-                <Icon icon="lets-icons:shop-duotone" />
-              </div>
-              店家資訊
-            </RouterLink>
-          </li>
-          <li>
-            <RouterLink class="link" to="/">
-              <div class="icon">
-                <Icon icon="ic:twotone-table-restaurant" />
-              </div>
-              桌號設定
-            </RouterLink>
-          </li>
-          <li>
-            <RouterLink class="link" to="/">
-              <div class="icon">
-                <Icon icon="solar:sort-by-time-line-duotone" />
-              </div>
-              訂位控管
+              <p>角色管理</p>
             </RouterLink>
           </li>
         </ul>
       </div>
 
       <div class="group">
-        <p class="group-title">管理</p>
+        <p class="group-title">維護</p>
 
         <ul class="links">
           <li>
-            <RouterLink class="link" to="/">
+            <RouterLink class="link" :to="{ name: 'index' }">
               <div class="icon">
-                <Icon icon="lets-icons:shop-duotone" />
+                <Icon icon="fa-solid:user-edit" />
               </div>
-              店家資訊
+              <p>關於我們維護</p>
             </RouterLink>
           </li>
+        </ul>
+      </div>
+
+      <div class="group">
+        <p class="group-title">設定</p>
+
+        <ul class="links">
           <li>
-            <RouterLink class="link" to="/">
+            <RouterLink class="link" :to="{ name: 'Profile' }">
               <div class="icon">
-                <Icon icon="ic:twotone-table-restaurant" />
+                <Icon icon="fa-solid:user-edit" />
               </div>
-              桌號設定
-            </RouterLink>
-          </li>
-          <li>
-            <RouterLink class="link" to="/">
-              <div class="icon">
-                <Icon icon="solar:sort-by-time-line-duotone" />
-              </div>
-              訂位控管
+              <p>帳號設定</p>
             </RouterLink>
           </li>
         </ul>
@@ -276,6 +244,7 @@ const handleLogout = async () => {
         align-items: center;
 
         svg {
+          max-width: 20px;
           font-size: 1.25rem;
         }
       }

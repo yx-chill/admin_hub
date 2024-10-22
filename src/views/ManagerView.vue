@@ -8,7 +8,7 @@ import { NForm, NInput } from 'naive-ui'
   </main>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 main.main {
 
 }

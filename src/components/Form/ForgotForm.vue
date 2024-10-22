@@ -1,18 +1,15 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { NSpin, NForm, NFormItem, NAutoComplete, NButton } from 'naive-ui'
+import { storeToRefs } from 'pinia'
+import { useStateStore } from '@/stores/state'
 import { forgotPassword } from '@/api/auth'
 import { successMsg } from '@/composables/useMessage'
 
+const stateStore = useStateStore()
+const { emailList } = storeToRefs(stateStore)
 const pending = ref(false)
-const emailList = [
-  '@gmail.com',
-  '@yahoo.com.tw',
-  '@hotmail.com',
-  '@outlook.com',
-  '@msn.com',
-  '@pchome.com.tw'
-]
+
 // formRef
 const formRef = ref(null)
 // formValue
@@ -35,7 +32,7 @@ const rules = {
 }
 
 const emailOptions = computed(() => {
-  return emailList.map((suffix) => {
+  return emailList.value.map((suffix) => {
     const prefix = formValue.value.email.split('@')[0]
     return {
       label: prefix + suffix,

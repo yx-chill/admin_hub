@@ -35,7 +35,7 @@ import ForgotForm from '@/components/Form/ForgotForm.vue'
   </main>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .block {
   &:has(.form-block) {
     padding-top: 50px;

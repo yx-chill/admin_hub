@@ -2,19 +2,15 @@
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { NSpin, NForm, NFormItem, NInput, NAutoComplete, NButton } from 'naive-ui'
+import { storeToRefs } from 'pinia'
+import { useStateStore } from '@/stores/state'
 import { useAuthStore } from '@/stores/auth'
 import { register } from '@/api/auth'
 import { successMsg, errorMsg } from '@/composables/useMessage'
 
 const rPasswordFormItemRef = ref(null)
-const emailList = [
-  '@gmail.com',
-  '@yahoo.com.tw',
-  '@hotmail.com',
-  '@outlook.com',
-  '@msn.com',
-  '@pchome.com.tw'
-]
+const stateStore = useStateStore()
+const { emailList } = storeToRefs(stateStore)
 const pending = ref(false)
 const router = useRouter()
 const authStore = useAuthStore()
@@ -76,7 +72,7 @@ const rules = {
 }
 
 const emailOptions = computed(() => {
-  return emailList.map((suffix) => {
+  return emailList.value.map((suffix) => {
     const prefix = formValue.value.email.split('@')[0]
     return {
       label: prefix + suffix,

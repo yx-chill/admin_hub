@@ -88,6 +88,8 @@ const handleValidateButtonClick = (e) => {
   e.preventDefault()
   if (pending.value) return
 
+  if (!isChangeName.value && !isChangePassword.value) return
+
   formRef.value?.validate(async (errors) => {
     if (!errors) {
       const data = new FormData()

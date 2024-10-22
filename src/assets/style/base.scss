@@ -1,9 +1,10 @@
 :root {
   --color: #4a90e2;
-  --block-border-radius: 18px;
+  --block-border-radius: 12px;
   --base-gap: 20px;
 
   --color-base: #000;
+  --color-reverse-base: #fff;
   --color-text: #111c2d;
   --color-background: rgb(240, 245, 249);
   --block-color-background: rgb(255, 255, 255);
@@ -12,9 +13,13 @@
   --backdrop-background: rgba(0, 0, 0, 0.5);
   --menu-title-color: #00000099;
   --edit-img-background: rgba(0, 0, 0, 0.45);
-  --edit-img-background-hover: rgba(0, 0, 0, 1);
+  --edit-img-background-hover: rgba(0, 0, 0, 0.7);
   --tabs-border-color: #e0e0e0;
   --red: #d03050;
+  --del-background: #fce4e4;
+  --shadow: 0 1px 3px 0 rgba(0, 0, 0, .1), 0 1px 2px -1px rgba(0, 0, 0, .1);
+  --right-offset-shadow: 0 0 #0000;
+  --item-background: #fff;
 
   // weight
   --copyright-weight: 400;
@@ -28,6 +33,7 @@
 
 [color-scheme='dark'] {
   --color-base: #fff;
+  --color-reverse-base: #000;
   --color-text: #ffffffde;
   --color-background: #1a1a1a;
   --block-color-background: rgb(36, 36, 36);
@@ -35,10 +41,14 @@
   --block-box-shadow: 0 0 0 1px #ffffff2a;
   --backdrop-background: rgba(255, 255, 255, 0.05);
   --menu-title-color: #ffffff99;
-  --edit-img-background: rgba(255, 255, 255, 0.3);
-  --edit-img-background-hover: rgba(255, 255, 255, 0.6);
+  --edit-img-background: rgba(255, 255, 255, 0.45);
+  --edit-img-background-hover: rgba(255, 255, 255, 0.7);
   --tabs-border-color: #ffffff3a;
   --red: #e88080;
+  --del-background: rgb(36, 36, 36);
+  --shadow: 0 1px 3px 0 rgba(255, 255, 255, .1), 0 1px 2px -1px rgba(255, 255, 255, .1);
+  --right-offset-shadow: 0 0 #fff0;
+  --item-background: #333;
 
   // weight
   --copyright-weight: 300;

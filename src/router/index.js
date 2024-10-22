@@ -54,14 +54,60 @@ const router = createRouter({
           },
           component: () => import('@/views/ManagerView.vue')
         },
-        {
+        { // 帳號管理
+          path: 'users',
+          children: [
+            {
+              path: '',
+              name: 'Users',
+              meta: {
+                layout: ManagerLayout,
+                requireAuth: true
+              },
+              component: () => import('@/views/manage/UsersView.vue')
+            },
+            // {
+            //   path: ':id',
+            //   name: 'UserSettings',
+            //   meta: {
+            //     layout: ManagerLayout,
+            //     requireAuth: true
+            //   },
+            //   component: () => import('@/views/UserSettingsView.vue')
+            // }
+          ]
+        },
+        { // 權限管理
           path: 'permission',
           name: 'Permission',
           meta: {
             layout: ManagerLayout,
             requireAuth: true
           },
-          component: () => import('@/views/PermissionView.vue')
+          component: () => import('@/views/manage/PermissionView.vue')
+        },
+        { // 角色管理
+          path: 'role',
+          children: [
+            {
+              path: '',
+              name: 'Role',
+              meta: {
+                layout: ManagerLayout,
+                requireAuth: true
+              },
+              component: () => import('@/views/manage/RoleView.vue')
+            },
+            {
+              path: 'edit/:id',
+              name: 'RoleEdit',
+              meta: {
+                layout: ManagerLayout,
+                requireAuth: true
+              },
+              component: () => import('@/views/manage/RoleEditView.vue')
+            }
+          ]
         },
         { // 信箱驗證
           path: 'email/verify',
@@ -87,7 +133,7 @@ const router = createRouter({
             layout: ManagerLayout,
             requireAuth: true
           },
-          component: () => import('@/views/ProfileView.vue')
+          component: () => import('@/views/settings/ProfileView.vue')
         },
         {
           path: '/:catchAll(.*)*',
