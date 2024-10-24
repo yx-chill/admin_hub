@@ -6,16 +6,25 @@ import { Icon } from '@iconify/vue'
 import { useAuthStore } from '@/stores/auth'
 import { useStateStore } from '@/stores/state'
 import CropperComponent from '@/components/Cropper/CropperComponent.vue'
+import BtnBack from '@/components/Btn/BtnBack.vue'
+import BreadcrumbComponents from '@/components/BreadcrumbComponents.vue'
 import ProfileForm from '@/components/Form/ProfileForm.vue'
 
 const authStore = useAuthStore()
 const stateStore = useStateStore()
 const { user } = storeToRefs(authStore)
 const { showAvatarCropper } = storeToRefs(stateStore)
+
+const breadcrumbList = [{ title: '帳號設定' }]
 </script>
 
 <template>
   <main class="main">
+    <div class="page-top">
+      <BtnBack name="index" />
+      <BreadcrumbComponents :list="breadcrumbList" />
+    </div>
+
     <section class="profile-block block">
       <div class="cover-img"></div>
 

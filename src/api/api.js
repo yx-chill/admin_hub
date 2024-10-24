@@ -18,3 +18,45 @@ export const reSend = async () => {
     method: 'post'
   })
 }
+
+// 權限管理 - 列表
+export const getPermissions = async () => {
+  return await axios({
+    url: '/permissions',
+    method: 'get'
+  })
+}
+
+// 權限管理 - 新增
+export const createPermissions = async (data) => {
+  return await axios({
+    url: '/permissions',
+    method: 'post',
+    data
+  })
+}
+
+// 權限管理 - 顯示
+export const getPermission = async (id) => {
+  return await axios({
+    url: `/permissions/${id}`,
+    method: 'get'
+  })
+}
+
+// 權限管理 - 編輯
+export const editPermissions = async (id, data) => {
+  return await axios({
+    url: `/permissions/${id}`,
+    method: 'post',
+    data
+  })
+}
+
+// 權限管理 - 刪除
+export const deletePermissions = async (id) => {
+  return await axios({
+    url: `/permissions/${id}`,
+    method: 'delete'
+  })
+}

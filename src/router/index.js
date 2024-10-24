@@ -64,7 +64,7 @@ const router = createRouter({
                 layout: ManagerLayout,
                 requireAuth: true
               },
-              component: () => import('@/views/manage/UsersView.vue')
+              component: () => import('@/views/manage/users/UsersView.vue')
             },
             // {
             //   path: ':id',
@@ -79,12 +79,35 @@ const router = createRouter({
         },
         { // 權限管理
           path: 'permission',
-          name: 'Permission',
-          meta: {
-            layout: ManagerLayout,
-            requireAuth: true
-          },
-          component: () => import('@/views/manage/PermissionView.vue')
+          children: [
+            { // 列表
+              path: '',
+              name: 'Permission',
+              meta: {
+                layout: ManagerLayout,
+                requireAuth: true
+              },
+              component: () => import('@/views/manage/permission/PermissionView.vue')
+            },
+            { // 新增
+              path: 'create',
+              name: 'PermissionCreate',
+              meta: {
+                layout: ManagerLayout,
+                requireAuth: true
+              },
+              component: () => import('@/views/manage/permission/PermissionCreateView.vue')
+            },
+            { // 編輯
+              path: 'edit/:id',
+              name: 'PermissionEdit',
+              meta: {
+                layout: ManagerLayout,
+                requireAuth: true
+              },
+              component: () => import('@/views/manage/permission/PermissionEditView.vue')
+            }
+          ]
         },
         { // 角色管理
           path: 'role',
@@ -96,7 +119,7 @@ const router = createRouter({
                 layout: ManagerLayout,
                 requireAuth: true
               },
-              component: () => import('@/views/manage/RoleView.vue')
+              component: () => import('@/views/manage/role/RoleView.vue')
             },
             {
               path: 'edit/:id',
@@ -105,7 +128,7 @@ const router = createRouter({
                 layout: ManagerLayout,
                 requireAuth: true
               },
-              component: () => import('@/views/manage/RoleEditView.vue')
+              component: () => import('@/views/manage/role/RoleEditView.vue')
             }
           ]
         },

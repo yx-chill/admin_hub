@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { NScrollbar } from 'naive-ui'
 
@@ -10,6 +10,9 @@ import { useAuthStore } from '@/stores/auth'
 import { logout } from '@/api/auth'
 import { Icon } from '@iconify/vue'
 import WebLogo from '@/components/WebLogo.vue'
+
+const route = useRoute()
+console.log(route)
 
 const menuRef = ref(null)
 const stateStore = useStateStore()
@@ -43,15 +46,11 @@ const handleLogout = async () => {
 
         <ul class="links">
           <li>
-            <RouterLink class="link" :to="{ name: 'Users' }">
-              <div class="icon">
-                <Icon icon="uim:lock-access" />
-              </div>
-              <p>帳號管理</p>
-            </RouterLink>
-          </li>
-          <li>
-            <RouterLink class="link" :to="{ name: 'Permission' }">
+            <RouterLink
+              class="link"
+              :to="{ name: 'Permission' }"
+              :class="{ active: $route.path.includes('/permission') }"
+            >
               <div class="icon">
                 <Icon icon="uim:lock-access" />
               </div>
@@ -59,11 +58,39 @@ const handleLogout = async () => {
             </RouterLink>
           </li>
           <li>
-            <RouterLink class="link" :to="{ name: 'Role' }">
+            <RouterLink
+              class="link"
+              :to="{ name: 'Role' }"
+              :class="{ active: $route.path.includes('/role') }"
+            >
               <div class="icon">
                 <Icon icon="uim:lock-access" />
               </div>
               <p>角色管理</p>
+            </RouterLink>
+          </li>
+          <li>
+            <RouterLink
+              class="link"
+              :to="{ name: 'Users' }"
+              :class="{ active: $route.path.includes('/group') }"
+            >
+              <div class="icon">
+                <Icon icon="uim:lock-access" />
+              </div>
+              <p>群組管理</p>
+            </RouterLink>
+          </li>
+          <li>
+            <RouterLink
+              class="link"
+              :to="{ name: 'Users' }"
+              :class="{ active: $route.path.includes('/users') }"
+            >
+              <div class="icon">
+                <Icon icon="uim:lock-access" />
+              </div>
+              <p>帳號管理</p>
             </RouterLink>
           </li>
         </ul>
@@ -206,7 +233,8 @@ const handleLogout = async () => {
       transition: 0.3s;
       padding: 5px 0;
 
-      &.router-link-exact-active {
+      &.router-link-exact-active,
+      &.active {
         color: var(--color);
       }
 

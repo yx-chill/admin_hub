@@ -1,10 +1,20 @@
 <script setup>
-defineEmits(['submit'])
+defineProps({
+  showReset: {
+    type: Boolean,
+    default: false
+  }
+})
+defineEmits(['submit', 'reset'])
 </script>
 
 <template>
   <div class="btns">
-    <button type="button" class="btn-submit" @click="$emit('submit')">送出</button>
+    <button v-if="showReset" type="button" class="btn-reset" title="重置" @click="$emit('reset')">
+      重置
+    </button>
+
+    <button type="button" class="btn-submit" title="送出" @click="$emit('submit')">送出</button>
   </div>
 </template>
 
@@ -49,6 +59,10 @@ defineEmits(['submit'])
       filter: blur(5px);
       opacity: 0;
       transition: opacity 0.5s ease;
+    }
+
+    &.btn-reset {
+      background: var(--red);
     }
   }
 }

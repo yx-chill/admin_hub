@@ -23,7 +23,7 @@ const submit = () => {
       <h3 class="page-title">角色權限管理</h3>
 
       <ul class="permission-table">
-        <li class="head permission-item sticky-header">
+        <li class="head permission-item sticky-header row-item">
           <div class="">資源名稱</div>
           <div class="center">瀏覽</div>
           <div class="center">新增</div>
@@ -32,7 +32,7 @@ const submit = () => {
         </li>
 
         <template v-for="i in 5" :key="i">
-          <li class="permission-item">
+          <li class="permission-item row-item">
             <div class="">文章管理</div>
             <div class="center">
               <NSwitch size="small" :round="false" :rail-style="railStyle" />
@@ -48,7 +48,7 @@ const submit = () => {
             </div>
           </li>
 
-          <li class="permission-item">
+          <li class="permission-item row-item">
             <div class="">知識管理</div>
             <div class="center">
               <NSwitch size="small" :round="false" :rail-style="railStyle" />

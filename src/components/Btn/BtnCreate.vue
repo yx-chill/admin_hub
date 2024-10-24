@@ -14,7 +14,7 @@ defineProps({
 </script>
 
 <template>
-  <RouterLink class="btn-create" :to="{ name, params }">
+  <RouterLink class="btn-create" :to="{ name, params }" title="新增一筆">
     <Icon icon="typcn:plus-outline" />
   </RouterLink>
 </template>

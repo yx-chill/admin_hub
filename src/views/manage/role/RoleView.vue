@@ -52,7 +52,7 @@ const breadcrumbList = [{ title: '角色管理' }]
             <button type="button" class="del">刪除</button>
           </div>
         </li>
-        <li v-for="i in 10" :key="i" class="row-item role-grid">
+        <li class="row-item role-grid">
           <div class="item">
             <span>查看者</span>
           </div>
