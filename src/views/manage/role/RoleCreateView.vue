@@ -1,8 +1,8 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { NSpin, NForm, NFormItem, NInput, NSwitch } from 'naive-ui'
-import { getRolesEdit, getRole, editRoles } from '@/api/api'
+import { getRolesCreate, createRoles } from '@/api/api'
 import { successMsg } from '@/composables/useMessage'
 
 import isEqual from 'lodash-es/isEqual'
@@ -13,11 +13,9 @@ import BtnsSubmit from '@/components/Btn/BtnsSubmit.vue'
 import permissionTableData from '@/utils/permissionTableData'
 import railStyle from '@/utils/railStyle'
 
-const breadcrumbList = [{ title: '角色管理', name: 'Role' }, { title: '編輯' }]
+const breadcrumbList = [{ title: '角色管理', name: 'Role' }, { title: '新增' }]
 
-const route = useRoute()
 const router = useRouter()
-const { id } = route.params
 const data = ref([])
 const fetching = ref(true)
 const pending = ref(false)
@@ -42,15 +40,13 @@ const rules = {
 // 獲取資料
 const fetchData = async () => {
   fetching.value = true
-
-  const [permissionData, roleData] = await Promise.all([getRolesEdit(id), getRole(id)])
+  const permissionData = await getRolesCreate()
 
   data.value = permissionData?.data?.actions || []
 
   if (data.value) {
-    originValue.value.name = roleData.data.name
     data.value.forEach((item) => {
-      originValue.value.permissions[item.id] = permissionTableData(item, roleData.data.permissions)
+      originValue.value.permissions[item.id] = permissionTableData(item)
     })
 
     formValue.value = JSON.parse(JSON.stringify(originValue.value))
@@ -58,10 +54,10 @@ const fetchData = async () => {
   fetching.value = false
 }
 
-const handleEdit = async (id, data) => {
+const handleCreate = async (data) => {
   try {
     pending.value = true
-    await editRoles(id, data)
+    await createRoles(data)
   } finally {
     reset()
     pending.value = false
@@ -73,12 +69,9 @@ const submit = () => {
 
   formRef.value?.validate(async (errors) => {
     if (!errors) {
-      await handleEdit(id, {
-        _method: 'put',
-        ...formValue.value
-      })
+      await handleCreate(formValue.value)
       await router.push({ name: 'Role' })
-      successMsg('修改成功！')
+      successMsg('新增成功！')
     } else {
       scrollAndFocusToError(errors)
     }
@@ -114,7 +107,7 @@ onMounted(() => {
     </div>
 
     <section class="role-content block">
-      <h3 class="page-title">編輯角色權限</h3>
+      <h3 class="page-title">新增角色權限</h3>
 
       <div class="form-content">
         <NSpin :show="pending" size="large" stroke="4a90e2">
@@ -195,13 +188,7 @@ onMounted(() => {
             </ul>
           </NForm>
 
-          <BtnsSubmit
-            :reset-state="isChange"
-            :submit-state="isChange"
-            @reset="reset"
-            @submit="submit"
-            show-reset
-          />
+          <BtnsSubmit :reset-state="isChange" @reset="reset" @submit="submit" show-reset />
         </NSpin>
       </div>
     </section>

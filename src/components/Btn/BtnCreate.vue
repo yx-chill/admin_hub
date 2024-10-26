@@ -15,7 +15,8 @@ defineProps({
 
 <template>
   <RouterLink class="btn-create" :to="{ name, params }" title="新增一筆">
-    <Icon icon="typcn:plus-outline" />
+    <!-- <Icon icon="typcn:plus-outline" /> -->
+    <Icon icon="fa-solid:plus" />
   </RouterLink>
 </template>
 
@@ -32,7 +33,7 @@ defineProps({
   align-items: center;
   color: #fff;
   background: var(--color);
-  border-radius: 50%;
+  border-radius: 5px;
   border: none;
   padding: 0;
 
@@ -51,8 +52,8 @@ defineProps({
   }
 
   svg {
-    width: 70%;
-    height: 70%;
+    width: 60%;
+    height: 60%;
   }
 }
 </style>

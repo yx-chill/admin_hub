@@ -112,7 +112,7 @@ const router = createRouter({
         { // 角色管理
           path: 'role',
           children: [
-            {
+            { // 列表
               path: '',
               name: 'Role',
               meta: {
@@ -121,7 +121,16 @@ const router = createRouter({
               },
               component: () => import('@/views/manage/role/RoleView.vue')
             },
-            {
+            { // 新增
+              path: 'create',
+              name: 'RoleCreate',
+              meta: {
+                layout: ManagerLayout,
+                requireAuth: true
+              },
+              component: () => import('@/views/manage/role/RoleCreateView.vue')
+            },
+            { // 編輯
               path: 'edit/:id',
               name: 'RoleEdit',
               meta: {
@@ -159,7 +168,7 @@ const router = createRouter({
           component: () => import('@/views/settings/ProfileView.vue')
         },
         {
-          path: '/:catchAll(.*)*',
+          path: '/:catchAll(.*)',
           redirect: {
             name: 'index',
           },

@@ -14,7 +14,7 @@ defineProps({
 </script>
 
 <template>
-  <RouterLink class="btn-back" :to="{ name, params }" :title="回上一頁">
+  <RouterLink class="btn-back" :to="{ name, params }" title="回上一頁">
     <Icon icon="pajamas:go-back" />
     返回
   </RouterLink>

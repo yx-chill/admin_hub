@@ -1,5 +1,13 @@
 <script setup>
 defineProps({
+  resetState: {
+    type: Boolean,
+    default: false
+  },
+  submitState: {
+    type: Boolean,
+    default: false
+  },
   showReset: {
     type: Boolean,
     default: false
@@ -10,11 +18,26 @@ defineEmits(['submit', 'reset'])
 
 <template>
   <div class="btns">
-    <button v-if="showReset" type="button" class="btn-reset" title="重置" @click="$emit('reset')">
+    <button
+      v-if="showReset"
+      type="button"
+      class="btn-reset"
+      title="重置"
+      :disabled="resetState"
+      @click="$emit('reset')"
+    >
       重置
     </button>
 
-    <button type="button" class="btn-submit" title="送出" @click="$emit('submit')">送出</button>
+    <button
+      type="button"
+      class="btn-submit"
+      title="送出"
+      :disabled="submitState"
+      @click="$emit('submit')"
+    >
+      送出
+    </button>
   </div>
 </template>
 
@@ -38,8 +61,9 @@ defineEmits(['submit', 'reset'])
     border: none;
     padding: 0.75rem 1.75rem;
     z-index: 0;
+    transition: 0.3s ease;
 
-    &:hover {
+    &:hover:not(:disabled) {
       &::after {
         opacity: 1;
       }
@@ -63,6 +87,11 @@ defineEmits(['submit', 'reset'])
 
     &.btn-reset {
       background: var(--red);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
     }
   }
 }

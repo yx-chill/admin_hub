@@ -60,3 +60,61 @@ export const deletePermissions = async (id) => {
     method: 'delete'
   })
 }
+
+// 角色管理 - 列表
+export const getRoles = async () => {
+  return await axios({
+    url: '/roles',
+    method: 'get'
+  })
+}
+
+// 角色管理 - create權限表
+export const getRolesCreate = async () => {
+  return await axios({
+    url: '/roles/create',
+    method: 'get'
+  })
+}
+
+// 角色管理 - 新增
+export const createRoles = async (data) => {
+  return await axios({
+    url: '/roles',
+    method: 'post',
+    data
+  })
+}
+
+// 角色管理 - edit權限表
+export const getRolesEdit = async (id) => {
+  return await axios({
+    url: `/roles/${id}/edit`,
+    method: 'get'
+  })
+}
+
+// 角色管理 - 顯示
+export const getRole = async (id) => {
+  return await axios({
+    url: `/roles/${id}`,
+    method: 'get'
+  })
+}
+
+// 角色管理 - 編輯
+export const editRoles = async (id, data) => {
+  return await axios({
+    url: `/roles/${id}`,
+    method: 'post',
+    data
+  })
+}
+
+// 角色管理 - 刪除
+export const deleteRoles = async (id) => {
+  return await axios({
+    url: `/roles/${id}`,
+    method: 'delete'
+  })
+}

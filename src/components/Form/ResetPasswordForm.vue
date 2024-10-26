@@ -69,7 +69,6 @@ const handleRestPassword = async (data) => {
     successMsg(res.message)
     await router.push({ name: 'Login' })
   } catch (error) {
-    console.log('error', error)
     reset()
     passwordRef.value?.focus()
   } finally {

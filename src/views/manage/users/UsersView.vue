@@ -4,7 +4,7 @@ import { useDebounceFn } from '@vueuse/core'
 import { NSpin, NSwitch } from 'naive-ui'
 import BtnBack from '@/components/Btn/BtnBack.vue'
 import BreadcrumbComponents from '@/components/BreadcrumbComponents.vue'
-import railStyle from '@/utils/railStyle.js'
+import railStyle from '@/utils/railStyle'
 
 const breadcrumbList = [{ title: '帳號管理' }]
 const active = ref(false)

@@ -8,8 +8,8 @@ import { successMsg } from '@/composables/useMessage'
 
 import BtnBack from '@/components/Btn/BtnBack.vue'
 import BreadcrumbComponents from '@/components/BreadcrumbComponents.vue'
-import BtnsConfirm from '@/components/Btn/BtnsSubmit.vue'
-import railStyle from '@/utils/railStyle.js'
+import BtnsSubmit from '@/components/Btn/BtnsSubmit.vue'
+import railStyle from '@/utils/railStyle'
 
 const breadcrumbList = [{ title: '權限管理', name: 'Permission' }, { title: '新增' }]
 
@@ -46,8 +46,7 @@ const handleCreate = async (data) => {
   pending.value = true
 
   try {
-    const res = await createPermissions(data)
-    console.log(res)
+    await createPermissions(data)
   } finally {
     reset()
     pending.value = false
@@ -88,6 +87,7 @@ function reset() {
       delete: false
     }
   }
+  formRef.value?.restoreValidation()
 }
 </script>
 
@@ -164,7 +164,7 @@ function reset() {
             </div>
           </NForm>
 
-          <BtnsConfirm @reset="reset" @submit="submit" show-reset />
+          <BtnsSubmit @reset="reset" @submit="submit" show-reset />
         </NSpin>
       </div>
     </section>

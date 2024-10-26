@@ -8,8 +8,8 @@ import { successMsg } from '@/composables/useMessage'
 
 import BtnBack from '@/components/Btn/BtnBack.vue'
 import BreadcrumbComponents from '@/components/BreadcrumbComponents.vue'
-import BtnsConfirm from '@/components/Btn/BtnsSubmit.vue'
-import railStyle from '@/utils/railStyle.js'
+import BtnsSubmit from '@/components/Btn/BtnsSubmit.vue'
+import railStyle from '@/utils/railStyle'
 
 const breadcrumbList = [{ title: '權限管理', name: 'Permission' }, { title: '編輯' }]
 
@@ -63,8 +63,7 @@ const handleEdit = async (id, data) => {
   pending.value = true
 
   try {
-    const res = await editPermissions(id, data)
-    successMsg(`${res.data.name} 修改成功！`)
+    await editPermissions(id, data)
   } finally {
     reset()
     pending.value = false
@@ -81,6 +80,7 @@ const submit = () => {
         ...formValue.value
       })
       await router.push({ name: 'Permission' })
+      successMsg('修改成功！')
     } else {
       scrollAndFocusToError(errors)
     }
@@ -103,6 +103,7 @@ function reset() {
       resource: data.value.resource,
       action: data.value.action
     }
+    formRef.value?.restoreValidation()
   }
 }
 
@@ -184,7 +185,7 @@ onMounted(() => {
             </div>
           </NForm>
 
-          <BtnsConfirm @reset="reset" @submit="submit" :show-reset="Boolean(data)" />
+          <BtnsSubmit @reset="reset" @submit="submit" show-reset />
         </NSpin>
       </div>
     </section>

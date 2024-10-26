@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { NScrollbar } from 'naive-ui'
 
@@ -10,9 +10,6 @@ import { useAuthStore } from '@/stores/auth'
 import { logout } from '@/api/auth'
 import { Icon } from '@iconify/vue'
 import WebLogo from '@/components/WebLogo.vue'
-
-const route = useRoute()
-console.log(route)
 
 const menuRef = ref(null)
 const stateStore = useStateStore()
