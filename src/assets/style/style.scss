@@ -104,6 +104,7 @@ section.block {
   border: none;
   padding: 0;
   padding-left: 4px;
+  transition: 0.3s ease;
 
   &:not(:disabled)::after {
     content: '';

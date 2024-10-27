@@ -61,7 +61,7 @@ const handleLogout = async () => {
               :class="{ active: $route.path.includes('/role') }"
             >
               <div class="icon">
-                <Icon icon="uim:lock-access" />
+                <Icon icon="mynaui:user" />
               </div>
               <p>角色管理</p>
             </RouterLink>
@@ -73,7 +73,7 @@ const handleLogout = async () => {
               :class="{ active: $route.path.includes('/group') }"
             >
               <div class="icon">
-                <Icon icon="uim:lock-access" />
+                <Icon icon="mynaui:users-group-solid" />
               </div>
               <p>群組管理</p>
             </RouterLink>
@@ -85,7 +85,7 @@ const handleLogout = async () => {
               :class="{ active: $route.path.includes('/users') }"
             >
               <div class="icon">
-                <Icon icon="uim:lock-access" />
+                <Icon icon="mynaui:user-waves" />
               </div>
               <p>帳號管理</p>
             </RouterLink>
@@ -115,7 +115,7 @@ const handleLogout = async () => {
           <li>
             <RouterLink class="link" :to="{ name: 'Profile' }">
               <div class="icon">
-                <Icon icon="fa-solid:user-edit" />
+                <Icon icon="mingcute:user-setting-line" />
               </div>
               <p>帳號設定</p>
             </RouterLink>

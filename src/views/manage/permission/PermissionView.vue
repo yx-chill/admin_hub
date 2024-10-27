@@ -117,7 +117,6 @@ onMounted(() => {
         </template>
         <template v-else>
           <p class="">權限名稱</p>
-          <p class="">資源名稱</p>
           <p class="center">瀏覽</p>
           <p class="center">新增</p>
           <p class="center">編輯</p>
@@ -155,9 +154,6 @@ onMounted(() => {
             <li v-for="item in data" :key="item.id" class="row-item permission-grid">
               <div class="item">
                 <span>{{ item.name }}</span>
-              </div>
-              <div class="item">
-                <span>{{ item.resource }}</span>
               </div>
               <!-- 瀏覽 -->
               <div class="center item">
@@ -218,7 +214,7 @@ onMounted(() => {
 
 .permission-grid {
   display: grid;
-  grid-template-columns: 1.5fr 1fr repeat(4, 100px) 150px;
+  grid-template-columns: 1fr repeat(4, 100px) 150px;
   align-items: center;
   column-gap: 5px;
 

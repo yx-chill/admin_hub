@@ -52,21 +52,26 @@ const rules = {
 const fetchData = async () => {
   fetching.value = true
 
-  const res = await getPermission(id)
-  data.value = res?.data || ''
+  try {
+    const res = await getPermission(id)
+    data.value = res?.data || ''
 
-  if (data.value) {
-    originValue.value = {
-      name: data.value.name,
-      resource: data.value.resource,
-      action: { ...data.value.action }
+    if (data.value) {
+      originValue.value = {
+        name: data.value.name,
+        resource: data.value.resource,
+        action: { ...data.value.action }
+      }
+
+      formValue.value = JSON.parse(JSON.stringify(originValue.value))
     }
-
-    formValue.value = JSON.parse(JSON.stringify(originValue.value))
-
-    console.log(formValue.value)
+  } catch (error) {
+    if (error.status == 404) {
+      return router.push({ name: 'Permission' })
+    }
+  } finally {
+    fetching.value = false
   }
-  fetching.value = false
 }
 
 const handleEdit = async (id, data) => {
@@ -130,66 +135,68 @@ onMounted(() => {
 
       <div class="form-content">
         <NSpin :show="pending" size="large" stroke="4a90e2">
-          <NForm
-            ref="formRef"
-            class="setting-form"
-            inline
-            :model="formValue"
-            :rules="rules"
-            size="large"
-          >
-            <div class="column-2">
-              <NFormItem label="權限名稱" class="name form-item" path="name">
-                <NInput v-model:value="formValue.name" placeholder="權限名稱" />
-              </NFormItem>
+          <div class="load" :class="{ loading: fetching }">
+            <NForm
+              ref="formRef"
+              class="setting-form"
+              inline
+              :model="formValue"
+              :rules="rules"
+              size="large"
+            >
+              <div class="column-2">
+                <NFormItem label="權限名稱" class="name form-item" path="name">
+                  <NInput v-model:value="formValue.name" placeholder="權限名稱" />
+                </NFormItem>
 
-              <NFormItem label="資源名稱" class="resource form-item" path="resource">
-                <NInput v-model:value="formValue.resource" placeholder="資源名稱" />
-              </NFormItem>
-            </div>
+                <NFormItem label="資源名稱" class="resource form-item" path="resource">
+                  <NInput v-model:value="formValue.resource" placeholder="資源名稱" />
+                </NFormItem>
+              </div>
 
-            <div class="permission-header permission-grid row-item">
-              <p class="center">瀏覽</p>
-              <p class="center">新增</p>
-              <p class="center">編輯</p>
-              <p class="center">刪除</p>
-            </div>
+              <div class="permission-header permission-grid row-item">
+                <p class="center">瀏覽</p>
+                <p class="center">新增</p>
+                <p class="center">編輯</p>
+                <p class="center">刪除</p>
+              </div>
 
-            <div class="row-item permission-grid">
-              <div class="center item">
-                <NSwitch
-                  v-model:value="formValue.action.read"
-                  size="small"
-                  :round="false"
-                  :rail-style="railStyle"
-                />
+              <div class="row-item permission-grid">
+                <div class="center item">
+                  <NSwitch
+                    v-model:value="formValue.action.read"
+                    size="small"
+                    :round="false"
+                    :rail-style="railStyle"
+                  />
+                </div>
+                <div class="center item">
+                  <NSwitch
+                    v-model:value="formValue.action.create"
+                    size="small"
+                    :round="false"
+                    :rail-style="railStyle"
+                  />
+                </div>
+                <div class="center item">
+                  <NSwitch
+                    v-model:value="formValue.action.update"
+                    size="small"
+                    :round="false"
+                    :rail-style="railStyle"
+                  />
+                </div>
+                <div class="center item">
+                  <NSwitch
+                    v-model:value="formValue.action.delete"
+                    size="small"
+                    :round="false"
+                    :rail-style="railStyle"
+                  />
+                </div>
               </div>
-              <div class="center item">
-                <NSwitch
-                  v-model:value="formValue.action.create"
-                  size="small"
-                  :round="false"
-                  :rail-style="railStyle"
-                />
-              </div>
-              <div class="center item">
-                <NSwitch
-                  v-model:value="formValue.action.update"
-                  size="small"
-                  :round="false"
-                  :rail-style="railStyle"
-                />
-              </div>
-              <div class="center item">
-                <NSwitch
-                  v-model:value="formValue.action.delete"
-                  size="small"
-                  :round="false"
-                  :rail-style="railStyle"
-                />
-              </div>
-            </div>
-          </NForm>
+            </NForm>
+          </div>
 
           <BtnsSubmit
             :reset-state="isChange"
@@ -222,6 +229,14 @@ onMounted(() => {
 
   .center {
     text-align: center;
+  }
+}
+
+.load {
+  transition: 0.3s ease;
+
+  &.loading {
+    filter: blur(2px);
   }
 }
 

@@ -43,19 +43,29 @@ const rules = {
 const fetchData = async () => {
   fetching.value = true
 
-  const [permissionData, roleData] = await Promise.all([getRolesEdit(id), getRole(id)])
+  try {
+    const [permissionData, roleData] = await Promise.all([getRolesEdit(id), getRole(id)])
 
-  data.value = permissionData?.data?.actions || []
+    data.value = permissionData?.data?.actions || []
 
-  if (data.value) {
-    originValue.value.name = roleData.data.name
-    data.value.forEach((item) => {
-      originValue.value.permissions[item.id] = permissionTableData(item, roleData.data.permissions)
-    })
+    if (data.value) {
+      originValue.value.name = roleData.data.name
+      data.value.forEach((item) => {
+        originValue.value.permissions[item.id] = permissionTableData(
+          item,
+          roleData.data.permissions
+        )
+      })
 
-    formValue.value = JSON.parse(JSON.stringify(originValue.value))
+      formValue.value = JSON.parse(JSON.stringify(originValue.value))
+    }
+  } catch (error) {
+    if (error.status == 404) {
+      return router.push({ name: 'Role' })
+    }
+  } finally {
+    fetching.value = false
   }
-  fetching.value = false
 }
 
 const handleEdit = async (id, data) => {
@@ -118,82 +128,84 @@ onMounted(() => {
 
       <div class="form-content">
         <NSpin :show="pending" size="large" stroke="4a90e2">
-          <NForm
-            ref="formRef"
-            class="setting-form"
-            inline
-            :model="formValue"
-            :rules="rules"
-            size="large"
-          >
-            <div class="column-2">
-              <NFormItem label="角色名稱" class="name form-item" path="name">
-                <NInput v-model:value="formValue.name" placeholder="角色名稱" />
-              </NFormItem>
-            </div>
+          <div class="load" :class="{ loading: fetching }">
+            <NForm
+              ref="formRef"
+              class="setting-form"
+              inline
+              :model="formValue"
+              :rules="rules"
+              size="large"
+            >
+              <div class="column-2">
+                <NFormItem label="角色名稱" class="name form-item" path="name">
+                  <NInput v-model:value="formValue.name" placeholder="角色名稱" />
+                </NFormItem>
+              </div>
 
-            <ul class="permission-table">
-              <li class="head permission-item sticky-header row-item">
-                <div class="">權限名稱</div>
-                <div class="center">瀏覽</div>
-                <div class="center">新增</div>
-                <div class="center">編輯</div>
-                <div class="center">刪除</div>
-              </li>
-
-              <ItemSkeleton v-if="fetching" />
-
-              <template v-else-if="data.length > 0">
-                <li
-                  v-for="item in data"
-                  :key="`rolePermission${item.id}`"
-                  class="permission-item row-item"
-                >
-                  <div class="">{{ item.name }}</div>
-                  <!-- 瀏覽 -->
-                  <div class="center">
-                    <NSwitch
-                      v-if="item.action.read"
-                      v-model:value="formValue.permissions[item.id].read"
-                      size="small"
-                      :round="false"
-                      :rail-style="railStyle"
-                    />
-                  </div>
-                  <!-- 新增 -->
-                  <div class="center">
-                    <NSwitch
-                      v-if="item.action.create"
-                      v-model:value="formValue.permissions[item.id].create"
-                      size="small"
-                      :round="false"
-                      :rail-style="railStyle"
-                    />
-                  </div>
-                  <!-- 編輯 -->
-                  <div class="center">
-                    <NSwitch
-                      v-if="item.action.update"
-                      v-model:value="formValue.permissions[item.id].update"
-                      size="small"
-                      :round="false"
-                      :rail-style="railStyle"
-                    />
-                  </div>
-                  <!-- 刪除 -->
-                  <div class="center">
-                    <NSwitch
-                      v-if="item.action.delete"
-                      v-model:value="formValue.permissions[item.id].delete"
-                      size="small"
-                      :round="false"
-                      :rail-style="railStyle"
-                    />
-                  </div>
+              <ul class="permission-table">
+                <li class="head permission-item sticky-header row-item">
+                  <div class="">權限名稱</div>
+                  <div class="center">瀏覽</div>
+                  <div class="center">新增</div>
+                  <div class="center">編輯</div>
+                  <div class="center">刪除</div>
                 </li>
-              </template>
-            </ul>
-          </NForm>
+
+                <ItemSkeleton v-if="fetching" />
+
+                <template v-else-if="data.length > 0">
+                  <li
+                    v-for="item in data"
+                    :key="`rolePermission${item.id}`"
+                    class="permission-item row-item"
+                  >
+                    <div class="">{{ item.name }}</div>
+                    <!-- 瀏覽 -->
+                    <div class="center">
+                      <NSwitch
+                        v-if="item.action.read"
+                        v-model:value="formValue.permissions[item.id].read"
+                        size="small"
+                        :round="false"
+                        :rail-style="railStyle"
+                      />
+                    </div>
+                    <!-- 新增 -->
+                    <div class="center">
+                      <NSwitch
+                        v-if="item.action.create"
+                        v-model:value="formValue.permissions[item.id].create"
+                        size="small"
+                        :round="false"
+                        :rail-style="railStyle"
+                      />
+                    </div>
+                    <!-- 編輯 -->
+                    <div class="center">
+                      <NSwitch
+                        v-if="item.action.update"
+                        v-model:value="formValue.permissions[item.id].update"
+                        size="small"
+                        :round="false"
+                        :rail-style="railStyle"
+                      />
+                    </div>
+                    <!-- 刪除 -->
+                    <div class="center">
+                      <NSwitch
+                        v-if="item.action.delete"
+                        v-model:value="formValue.permissions[item.id].delete"
+                        size="small"
+                        :round="false"
+                        :rail-style="railStyle"
+                      />
+                    </div>
+                  </li>
+                </template>
+              </ul>
+            </NForm>
+          </div>
 
           <BtnsSubmit
             :reset-state="isChange"
@@ -226,6 +238,14 @@ onMounted(() => {
 
   .center {
     text-align: center;
+  }
+}
+
+.load {
+  transition: 0.3s ease;
+
+  &.loading {
+    filter: blur(2px);
   }
 }
 

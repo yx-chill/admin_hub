@@ -1,10 +1,13 @@
 <script setup>
+import { useRoute, useRouter } from 'vue-router'
 import { onMounted, ref, watch } from 'vue'
 import { NConfigProvider, darkTheme } from 'naive-ui'
 import { useDark } from '@vueuse/core'
 import { getUser } from '@/api/auth'
 import { useAuthStore } from '@/stores/auth'
 
+const route = useRoute()
+const router = useRouter()
 // 網站樣式主題(dark/light)
 const theme = ref(null)
 const isDark = useDark()
@@ -25,7 +28,13 @@ onMounted(async () => {
     const userData = await getUser()
     authStore.setUser(userData)
   } catch (error) {
-    /* empty */
+    if (error.status == 401) {
+      watch(route, (newRoute) => {
+        if (newRoute.meta.requireAuth) {
+          router.push('Login')
+        }
+      })
+    }
   } finally {
     authStore.setLoading(false)
   }
@@ -51,8 +60,10 @@ onMounted(async () => {
 <style scoped>
 .bg {
   --gradient-opacity: 0.85;
-  --ray-gradient: radial-gradient(rgba(83, 196, 255, var(--gradient-opacity)) 0%,
-      rgba(43, 166, 255, 0) 100%);
+  --ray-gradient: radial-gradient(
+    rgba(83, 196, 255, var(--gradient-opacity)) 0%,
+    rgba(43, 166, 255, 0) 100%
+  );
   transition: opacity 0.25s linear;
   position: fixed;
   inset: 0;
