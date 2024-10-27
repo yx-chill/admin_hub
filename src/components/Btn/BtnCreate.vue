@@ -14,20 +14,31 @@ defineProps({
 </script>
 
 <template>
-  <RouterLink class="btn-create" :to="{ name, params }" title="新增一筆">
-    <!-- <Icon icon="typcn:plus-outline" /> -->
-    <Icon icon="fa-solid:plus" />
-  </RouterLink>
+  <div class="btn-group">
+    <slot />
+    <RouterLink class="btn-create" :to="{ name, params }" title="新增一筆">
+      <!-- <Icon icon="typcn:plus-outline" /> -->
+      <Icon icon="fa-solid:plus" />
+    </RouterLink>
+  </div>
 </template>
 
 <style lang="scss" scoped>
-.btn-create {
-  width: 40px;
-  height: 40px;
+.btn-group {
   position: absolute;
   top: 12px;
   right: var(--base-gap);
   z-index: 2;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  column-gap: 10px;
+}
+
+.btn-create {
+  position: relative;
+  width: 40px;
+  height: 40px;
   display: flex;
   justify-content: center;
   align-items: center;

@@ -1,11 +1,12 @@
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { NSpin, NForm, NFormItem, NInput, NSwitch } from 'naive-ui'
 
 import { createPermissions } from '@/api/api'
 import { successMsg } from '@/composables/useMessage'
 
+import isEqual from 'lodash-es/isEqual'
 import BtnBack from '@/components/Btn/BtnBack.vue'
 import BreadcrumbComponents from '@/components/BreadcrumbComponents.vue'
 import BtnsSubmit from '@/components/Btn/BtnsSubmit.vue'
@@ -17,8 +18,8 @@ const router = useRouter()
 const pending = ref(false)
 // formRef
 const formRef = ref(null)
-// formValue
-const formValue = ref({
+// originValue
+const originValue = ref({
   name: '',
   resource: '',
   action: {
@@ -28,6 +29,8 @@ const formValue = ref({
     delete: false
   }
 })
+// formValue
+const formValue = ref(JSON.parse(JSON.stringify(originValue.value)))
 // rules
 const rules = {
   name: {
@@ -77,18 +80,11 @@ function scrollAndFocusToError(errors) {
 }
 
 function reset() {
-  formValue.value = {
-    name: '',
-    resource: '',
-    action: {
-      create: false,
-      read: false,
-      update: false,
-      delete: false
-    }
-  }
+  formValue.value = JSON.parse(JSON.stringify(originValue.value))
   formRef.value?.restoreValidation()
 }
+
+const isChange = computed(() => isEqual(formValue.value, originValue.value))
 </script>
 
 <template>
@@ -164,7 +160,7 @@ function reset() {
             </div>
           </NForm>
 
-          <BtnsSubmit @reset="reset" @submit="submit" show-reset />
+          <BtnsSubmit :reset-state="isChange" @reset="reset" @submit="submit" show-reset />
         </NSpin>
       </div>
     </section>

@@ -53,6 +53,15 @@ export const editPermissions = async (id, data) => {
   })
 }
 
+// 權限管理 - 排序
+export const sortPermissions = async (id, data) => {
+  return await axios({
+    url: '/permissions/sort',
+    method: 'post',
+    data
+  })
+}
+
 // 權限管理 - 刪除
 export const deletePermissions = async (id) => {
   return await axios({
@@ -106,6 +115,15 @@ export const getRole = async (id) => {
 export const editRoles = async (id, data) => {
   return await axios({
     url: `/roles/${id}`,
+    method: 'post',
+    data
+  })
+}
+
+// 角色管理 - 排序
+export const sortRoles = async (id, data) => {
+  return await axios({
+    url: '/roles/sort',
     method: 'post',
     data
   })

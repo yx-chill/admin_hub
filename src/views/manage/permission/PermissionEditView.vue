@@ -1,11 +1,11 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { NSpin, NForm, NFormItem, NInput, NSwitch } from 'naive-ui'
-
 import { getPermission, editPermissions } from '@/api/api'
 import { successMsg } from '@/composables/useMessage'
 
+import isEqual from 'lodash-es/isEqual'
 import BtnBack from '@/components/Btn/BtnBack.vue'
 import BreadcrumbComponents from '@/components/BreadcrumbComponents.vue'
 import BtnsSubmit from '@/components/Btn/BtnsSubmit.vue'
@@ -17,11 +17,12 @@ const route = useRoute()
 const router = useRouter()
 const { id } = route.params
 const data = ref('')
+const fetching = ref(true)
 const pending = ref(false)
 // formRef
 const formRef = ref(null)
-// formValue
-const formValue = ref({
+// originValue
+const originValue = ref({
   name: '',
   resource: '',
   action: {
@@ -31,6 +32,8 @@ const formValue = ref({
     delete: false
   }
 })
+// formValue
+const formValue = ref(JSON.parse(JSON.stringify(originValue.value)))
 // rules
 const rules = {
   name: {
@@ -47,16 +50,23 @@ const rules = {
 
 // 獲取資料
 const fetchData = async () => {
+  fetching.value = true
+
   const res = await getPermission(id)
   data.value = res?.data || ''
 
   if (data.value) {
-    formValue.value = {
+    originValue.value = {
       name: data.value.name,
       resource: data.value.resource,
       action: { ...data.value.action }
     }
+
+    formValue.value = JSON.parse(JSON.stringify(originValue.value))
+
+    console.log(formValue.value)
   }
+  fetching.value = false
 }
 
 const handleEdit = async (id, data) => {
@@ -97,15 +107,11 @@ function scrollAndFocusToError(errors) {
 }
 
 function reset() {
-  if (data.value) {
-    formValue.value = {
-      name: data.value.name,
-      resource: data.value.resource,
-      action: data.value.action
-    }
-    formRef.value?.restoreValidation()
-  }
+  formValue.value = JSON.parse(JSON.stringify(originValue.value))
+  formRef.value?.restoreValidation()
 }
+
+const isChange = computed(() => isEqual(formValue.value, originValue.value))
 
 onMounted(() => {
   fetchData()
@@ -185,7 +191,13 @@ onMounted(() => {
             </div>
           </NForm>
 
-          <BtnsSubmit @reset="reset" @submit="submit" show-reset />
+          <BtnsSubmit
+            :reset-state="isChange"
+            :submit-state="isChange"
+            @reset="reset"
+            @submit="submit"
+            show-reset
+          />
         </NSpin>
       </div>
     </section>
