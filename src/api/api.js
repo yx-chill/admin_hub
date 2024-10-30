@@ -54,10 +54,10 @@ export const editPermissions = async (id, data) => {
 }
 
 // 權限管理 - 排序
-export const sortPermissions = async (id, data) => {
+export const sortPermissions = async (data) => {
   return await axios({
     url: '/permissions/sort',
-    method: 'post',
+    method: 'put',
     data
   })
 }
@@ -121,10 +121,10 @@ export const editRoles = async (id, data) => {
 }
 
 // 角色管理 - 排序
-export const sortRoles = async (id, data) => {
+export const sortRoles = async (data) => {
   return await axios({
     url: '/roles/sort',
-    method: 'post',
+    method: 'put',
     data
   })
 }
@@ -133,6 +133,67 @@ export const sortRoles = async (id, data) => {
 export const deleteRoles = async (id) => {
   return await axios({
     url: `/roles/${id}`,
+    method: 'delete'
+  })
+}
+
+// 群組管理 - 列表
+export const getGroups = async (data) => {
+  return await axios({
+    url: '/user-groups',
+    method: 'get',
+    data
+  })
+}
+
+// 群組管理 - create角色列表
+export const getGroupCreate = async () => {
+  return await axios({
+    url: '/user-groups/create',
+    method: 'get'
+  })
+}
+
+// 群組管理 - 新增
+export const createGroup = async (data) => {
+  return await axios({
+    url: '/user-groups',
+    method: 'post',
+    data
+  })
+}
+
+// 群組管理 - edit角色列表
+export const getGroupEdit = async (id) => {
+  return await axios({
+    url: `/user-groups/${id}/edit`,
+    method: 'get'
+  })
+}
+
+// 群組管理 - 顯示
+export const getGroup = async (id) => {
+  return await axios({
+    url: `/user-groups/${id}`,
+    method: 'get'
+  })
+}
+
+
+// 群組管理 - 編輯
+export const editGroup = async (id, data) => {
+  return await axios({
+    url: `/user-groups/${id}`,
+    method: 'put',
+    data
+  })
+}
+
+
+// 群組管理 - 刪除
+export const deleteGroups = async (id) => {
+  return await axios({
+    url: `/user-groups/${id}`,
     method: 'delete'
   })
 }

@@ -69,7 +69,7 @@ const handleLogout = async () => {
           <li>
             <RouterLink
               class="link"
-              :to="{ name: 'Users' }"
+              :to="{ name: 'Group' }"
               :class="{ active: $route.path.includes('/group') }"
             >
               <div class="icon">

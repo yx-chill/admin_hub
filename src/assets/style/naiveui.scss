@@ -126,3 +126,41 @@
 .n-card {
   border-radius: var(--block-border-radius);
 }
+
+// pagination
+.pagination {
+
+  .n-pagination-item {
+    --n-item-text-color-active: #4a90e2;
+    --n-item-text-color-hover: #4a90e2;
+    --n-item-border-active: 1px solid #4a90e2;
+  }
+
+  .n-base-selection-label {
+    // --n-color-active: rgba(49, 62, 255, 0.05);
+  }
+
+  .n-base-selection__state-border {
+    --n-border-hover: 1px solid #6695EF;
+    --n-border-active: 1px solid #6695EF;
+    --n-border-focus: 1px solid #6695EF;
+    --n-box-shadow-active: 0 0 8px 0 rgba(49, 62, 255, 0.4);
+    --n-box-shadow-focus: 0 0 8px 0 rgba(49, 62, 255, 0.4);
+  }
+}
+
+.n-base-select-menu .n-base-select-option {
+  --n-option-text-color-pressed: #4a90e2;
+
+  &.n-base-select-option--selected {
+    --n-option-text-color-active: #4a90e2;
+  }
+}
+
+.n-base-selection {
+
+  .n-base-selection-tags {
+    padding-top: 6px;
+    padding-bottom: 3px;
+  }
+}

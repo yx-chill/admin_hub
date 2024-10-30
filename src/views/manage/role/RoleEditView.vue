@@ -68,7 +68,7 @@ const fetchData = async () => {
   }
 }
 
-const handleEdit = async (id, data) => {
+const handleEdit = async (data) => {
   try {
     pending.value = true
     await editRoles(id, data)
@@ -83,7 +83,7 @@ const submit = () => {
 
   formRef.value?.validate(async (errors) => {
     if (!errors) {
-      await handleEdit(id, {
+      await handleEdit({
         _method: 'put',
         ...formValue.value
       })

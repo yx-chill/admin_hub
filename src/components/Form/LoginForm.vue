@@ -95,23 +95,23 @@ function reset() {
       size="large"
       @keyup.enter="handleValidateButtonClick"
     >
+      <NFormItem label="帳號" class="account form-item" path="account">
+        <NInput ref="accountRef" v-model:value="formValue.account" placeholder="Account" />
+      </NFormItem>
+
       <div class="remember-block">
-        <NFormItem label="帳號" class="account form-item" path="account">
-          <NInput ref="accountRef" v-model:value="formValue.account" placeholder="Account" />
+        <NFormItem label="密碼" class="password form-item" path="password">
+          <NInput
+            type="password"
+            show-password-on="mousedown"
+            v-model:value="formValue.password"
+            placeholder="Password"
+            @keydown.enter.prevent
+          />
         </NFormItem>
 
         <NCheckbox v-model:checked="formValue.remember"> 記住我 </NCheckbox>
       </div>
-
-      <NFormItem label="密碼" class="password form-item" path="password">
-        <NInput
-          type="password"
-          show-password-on="mousedown"
-          v-model:value="formValue.password"
-          placeholder="Password"
-          @keydown.enter.prevent
-        />
-      </NFormItem>
     </NForm>
 
     <NButton type="primary" class="btn-form" ghost block strong @click="handleValidateButtonClick">

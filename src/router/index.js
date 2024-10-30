@@ -54,28 +54,22 @@ const router = createRouter({
           },
           component: () => import('@/views/ManagerView.vue')
         },
-        { // 帳號管理
-          path: 'users',
-          children: [
-            {
-              path: '',
-              name: 'Users',
-              meta: {
-                layout: ManagerLayout,
-                requireAuth: true
-              },
-              component: () => import('@/views/manage/users/UsersView.vue')
-            },
-            // {
-            //   path: ':id',
-            //   name: 'UserSettings',
-            //   meta: {
-            //     layout: ManagerLayout,
-            //     requireAuth: true
-            //   },
-            //   component: () => import('@/views/UserSettingsView.vue')
-            // }
-          ]
+        { // 信箱驗證
+          path: 'email/verify',
+          name: 'EmailVerify',
+          meta: {
+            layout: ManagerLayout,
+            requireAuth: true
+          },
+          component: () => import('@/views/EmailVerifyView.vue'),
+          beforeEnter: () => {
+            const authStore = useAuthStore()
+            const { user } = storeToRefs(authStore)
+
+            if (user.value?.email_verified_at) {
+              return { name: 'index' }
+            }
+          },
         },
         { // 權限管理
           path: 'permission',
@@ -141,22 +135,60 @@ const router = createRouter({
             }
           ]
         },
-        { // 信箱驗證
-          path: 'email/verify',
-          name: 'EmailVerify',
-          meta: {
-            layout: ManagerLayout,
-            requireAuth: true
-          },
-          component: () => import('@/views/EmailVerifyView.vue'),
-          beforeEnter: () => {
-            const authStore = useAuthStore()
-            const { user } = storeToRefs(authStore)
-
-            if (user.value?.email_verified_at) {
-              return { name: 'index' }
+        { // 群組管理
+          path: 'group',
+          children: [
+            { // 列表
+              path: '',
+              name: 'Group',
+              meta: {
+                layout: ManagerLayout,
+                requireAuth: true
+              },
+              component: () => import('@/views/manage/group/GroupView.vue')
+            },
+            { // 新增
+              path: 'create',
+              name: 'GroupCreate',
+              meta: {
+                layout: ManagerLayout,
+                requireAuth: true
+              },
+              component: () => import('@/views/manage/group/GroupCreateView.vue')
+            },
+            { // 編輯
+              path: 'edit/:id',
+              name: 'GroupEdit',
+              meta: {
+                layout: ManagerLayout,
+                requireAuth: true
+              },
+              component: () => import('@/views/manage/group/GroupEditView.vue')
             }
-          },
+          ]
+        },
+        { // 帳號管理
+          path: 'users',
+          children: [
+            {
+              path: '',
+              name: 'Users',
+              meta: {
+                layout: ManagerLayout,
+                requireAuth: true
+              },
+              component: () => import('@/views/manage/users/UsersView.vue')
+            },
+            // {
+            //   path: ':id',
+            //   name: 'UserSettings',
+            //   meta: {
+            //     layout: ManagerLayout,
+            //     requireAuth: true
+            //   },
+            //   component: () => import('@/views/UserSettingsView.vue')
+            // }
+          ]
         },
         { // 個人資料
           path: 'profile',
@@ -167,7 +199,16 @@ const router = createRouter({
           },
           component: () => import('@/views/settings/ProfileView.vue')
         },
-        {
+        { // 有緣人電台
+          path: 'radio',
+          name: 'Radio',
+          meta: {
+            layout: ManagerLayout,
+            requireAuth: true
+          },
+          component: () => import('@/views/RadioView.vue')
+        },
+        { // catchAll
           path: '/:catchAll(.*)',
           redirect: {
             name: 'index',

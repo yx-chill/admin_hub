@@ -2,6 +2,7 @@
 import { onMounted, computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { NSpin, NForm, NFormItem, NInput, NSwitch } from 'naive-ui'
+
 import { getPermission, editPermissions } from '@/api/api'
 import { successMsg } from '@/composables/useMessage'
 
@@ -50,9 +51,8 @@ const rules = {
 
 // 獲取資料
 const fetchData = async () => {
-  fetching.value = true
-
   try {
+    fetching.value = true
     const res = await getPermission(id)
     data.value = res?.data || ''
 

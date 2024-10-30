@@ -66,10 +66,7 @@ const svaeSort = async () => {
   const ids = data.value.map((item) => item.id)
 
   try {
-    await sortPermissions({
-      _method: 'put',
-      ids
-    })
+    await sortPermissions({ ids })
     successMsg('儲存成功！')
   } finally {
     canSort.value = false
@@ -168,7 +165,7 @@ onMounted(() => {
                 <span class="signal" :class="{ off: !item.can_update }"></span>
               </div>
               <!-- 刪除 -->
-              <div class="center item off">
+              <div class="center item">
                 <span class="signal" :class="{ off: !item.can_delete }"></span>
               </div>
               <!-- 操作 -->

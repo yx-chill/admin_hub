@@ -66,10 +66,7 @@ const svaeSort = async () => {
   const ids = data.value.map((item) => item.id)
 
   try {
-    await sortRoles({
-      _method: 'put',
-      ids
-    })
+    await sortRoles({ ids })
     successMsg('儲存成功！')
   } finally {
     canSort.value = false

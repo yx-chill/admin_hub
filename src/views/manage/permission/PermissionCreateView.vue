@@ -46,9 +46,8 @@ const rules = {
 }
 
 const handleCreate = async (data) => {
-  pending.value = true
-
   try {
+    pending.value = true
     await createPermissions(data)
   } finally {
     reset()
