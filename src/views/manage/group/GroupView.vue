@@ -1,7 +1,8 @@
 <script setup>
 import { ref, watch } from 'vue'
-import { NSpin, NPagination } from 'naive-ui'
-import { getGroups, deleteGroups } from '@/api/api'
+import { NSpin, NSwitch, NPagination } from 'naive-ui'
+import { useDebounceFn } from '@vueuse/core'
+import { getGroups, deleteGroups, groupStatus } from '@/api/api'
 import { successMsg, errorMsg } from '@/composables/useMessage'
 
 import BtnBack from '@/components/Btn/BtnBack.vue'
@@ -10,6 +11,7 @@ import BtnCreate from '@/components/Btn/BtnCreate.vue'
 import SearchComponent from '@/components/Search/SearchComponent.vue'
 import ItemSkeleton from '@/components/Skeleton/ItemSkeleton.vue'
 import DeleteModal from '@/components/Modal/DeleteModal.vue'
+import railStyle from '@/utils/railStyle'
 
 // 分頁
 const itemCount = ref(0) // 總筆數
@@ -66,6 +68,24 @@ const handleConfirmDelete = async () => {
     selectedId.value = null
   }
 }
+
+// 修改狀態
+const handleChange = useDebounceFn(async (value, id) => {
+  if (pending.value) return
+
+  const groupData = data.value.find((item) => item.id === id)
+
+  try {
+    pending.value = true
+    await groupStatus(id, { status: value })
+    successMsg(`已修改 ${groupData.name} 的狀態`)
+  } catch (error) {
+    groupData.status = !value
+    errorMsg('狀態修改失敗！')
+  } finally {
+    pending.value = false
+  }
+}, 300)
 
 // 監聽 searchParams 的變化
 watch(
@@ -132,7 +152,13 @@ async function fetchData() {
             </div>
             <!-- 狀態 -->
             <div class="center item">
-              <span class="signal" :class="{ off: !item.status }"></span>
+              <NSwitch
+                v-model:value="item.status"
+                size="small"
+                :round="false"
+                :rail-style="railStyle"
+                @update:value="(value) => handleChange(value, item.id)"
+              />
             </div>
             <!-- 等級 -->
             <div class="center item">

@@ -5,6 +5,7 @@ import { NSpin, NForm, NFormItem, NInput, NSwitch } from 'naive-ui'
 import { getRolesCreate, createRoles } from '@/api/api'
 import { successMsg } from '@/composables/useMessage'
 
+import cloneDeep from 'lodash-es/cloneDeep'
 import isEqual from 'lodash-es/isEqual'
 import BtnBack from '@/components/Btn/BtnBack.vue'
 import BreadcrumbComponents from '@/components/BreadcrumbComponents.vue'
@@ -49,7 +50,7 @@ const fetchData = async () => {
       originValue.value.permissions[item.id] = permissionTableData(item)
     })
 
-    formValue.value = JSON.parse(JSON.stringify(originValue.value))
+    formValue.value = cloneDeep(originValue.value)
   }
   fetching.value = false
 }
@@ -88,7 +89,7 @@ function scrollAndFocusToError(errors) {
 }
 
 function reset() {
-  formValue.value = JSON.parse(JSON.stringify(originValue.value))
+  formValue.value = cloneDeep(originValue.value)
   formRef.value?.restoreValidation()
 }
 

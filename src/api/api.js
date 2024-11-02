@@ -115,7 +115,7 @@ export const getRole = async (id) => {
 export const editRoles = async (id, data) => {
   return await axios({
     url: `/roles/${id}`,
-    method: 'post',
+    method: 'put',
     data
   })
 }
@@ -138,7 +138,7 @@ export const deleteRoles = async (id) => {
 }
 
 // 群組管理 - 列表
-export const getGroups = async (data) => {
+export const getGroups = async (data = {}) => {
   return await axios({
     url: '/user-groups',
     method: 'get',
@@ -189,11 +189,90 @@ export const editGroup = async (id, data) => {
   })
 }
 
+// 群組管理 - 修改狀態
+export const groupStatus = async (id, data) => {
+  return await axios({
+    url: `/user-groups/${id}/status`,
+    method: 'put',
+    data
+  })
+}
+
 
 // 群組管理 - 刪除
 export const deleteGroups = async (id) => {
   return await axios({
     url: `/user-groups/${id}`,
+    method: 'delete'
+  })
+}
+
+// 帳號管理 - 列表
+export const getUsers = async (data = {}) => {
+  return await axios({
+    url: '/users',
+    method: 'get',
+    data
+  })
+}
+
+// 帳號管理 - 群組列表
+export const getUsersCreate = async () => {
+  return await axios({
+    url: '/users/create',
+    method: 'get'
+  })
+}
+
+// 帳號管理 - 新增
+export const createUsers = async (data) => {
+  return await axios({
+    url: '/users',
+    method: 'post',
+    data
+  })
+}
+
+
+// 帳號管理 - 群組列表
+export const getUsersEdit = async (id) => {
+  return await axios({
+    url: `/users/${id}/edit`,
+    method: 'get'
+  })
+}
+
+// 帳號管理 - 顯示
+export const getUser = async (id) => {
+  return await axios({
+    url: `/users/${id}`,
+    method: 'get'
+  })
+}
+
+
+// 帳號管理 - 編輯
+export const editUser = async (id, data) => {
+  return await axios({
+    url: `/users/${id}`,
+    method: 'put',
+    data
+  })
+}
+
+// 帳號管理 - 修改狀態
+export const userStatus = async (id, data) => {
+  return await axios({
+    url: `/users/${id}/status`,
+    method: 'put',
+    data
+  })
+}
+
+// 帳號管理 - 刪除
+export const deleteUsers = async (id) => {
+  return await axios({
+    url: `/users/${id}`,
     method: 'delete'
   })
 }

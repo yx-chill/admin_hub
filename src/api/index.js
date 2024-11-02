@@ -2,6 +2,8 @@ import axios from 'axios'
 import { logout } from '@/api/auth'
 import { useAuthStore } from '@/stores/auth'
 import { errorMsg } from '@/composables/useMessage'
+import router from '@/router/index'
+import { storeToRefs } from 'pinia'
 
 let isLoggingOut = false
 
@@ -15,6 +17,7 @@ const handleLogout = async () => {
   } finally {
     isLoggingOut = false
     authStore.clearUser()
+    await router.push({ name: 'Login' })
   }
 }
 
@@ -62,11 +65,15 @@ const createAxiosInstance = () => {
 
       switch (error.response.status) {
         case 401:
-        case 419:
-          if (!error.config.url.includes('/logout')) {
+        case 419: {
+          const authStore = useAuthStore()
+          const { isAuthenticated } = storeToRefs(authStore)
+
+          if (isAuthenticated.value) {
             await handleLogout()
           }
           break
+        }
         case 400:
         case 403:
         case 429:

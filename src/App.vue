@@ -28,13 +28,13 @@ onMounted(async () => {
     const userData = await getUser()
     authStore.setUser(userData)
   } catch (error) {
-    if (error.status == 401) {
-      watch(route, (newRoute) => {
-        if (newRoute.meta.requireAuth) {
-          router.push('Login')
-        }
-      })
-    }
+    // if (error.status == 401) {
+    //   watch(route, (newRoute) => {
+    //     if (newRoute.meta.requireAuth) {
+    //       router.push({ name: 'Login' })
+    //     }
+    //   })
+    // }
   } finally {
     authStore.setLoading(false)
   }

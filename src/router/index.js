@@ -10,6 +10,8 @@ import ManagerLayout from '@/layouts/ManagerLayout.vue'
 // page
 import LoginView from '@/views/LoginView.vue'
 
+import { warningMsg } from '@/composables/useMessage'
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -66,7 +68,7 @@ const router = createRouter({
             const authStore = useAuthStore()
             const { user } = storeToRefs(authStore)
 
-            if (user.value?.email_verified_at) {
+            if (user.value?.is_email_verified) {
               return { name: 'index' }
             }
           },
@@ -170,7 +172,7 @@ const router = createRouter({
         { // 帳號管理
           path: 'users',
           children: [
-            {
+            { // 列表
               path: '',
               name: 'Users',
               meta: {
@@ -179,15 +181,24 @@ const router = createRouter({
               },
               component: () => import('@/views/manage/users/UsersView.vue')
             },
-            // {
-            //   path: ':id',
-            //   name: 'UserSettings',
-            //   meta: {
-            //     layout: ManagerLayout,
-            //     requireAuth: true
-            //   },
-            //   component: () => import('@/views/UserSettingsView.vue')
-            // }
+            { // 新增
+              path: 'create',
+              name: 'UsersCreate',
+              meta: {
+                layout: ManagerLayout,
+                requireAuth: true
+              },
+              component: () => import('@/views/manage/users/UsersCreateView.vue')
+            },
+            { // 編輯
+              path: 'edit/:id',
+              name: 'UsersEdit',
+              meta: {
+                layout: ManagerLayout,
+                requireAuth: true
+              },
+              component: () => import('@/views/manage/users/UsersEditView.vue')
+            }
           ]
         },
         { // 個人資料
@@ -208,13 +219,11 @@ const router = createRouter({
           },
           component: () => import('@/views/RadioView.vue')
         },
-        { // catchAll
-          path: '/:catchAll(.*)',
-          redirect: {
-            name: 'index',
-          },
-        }
       ]
+    },
+    { // catchAll
+      path: '/:pathMatch(.*)*',
+      redirect: { name: 'index' }
     }
   ]
 })
@@ -242,9 +251,16 @@ router.beforeEach(async (to) => {
     }
   } else {
     // 有登入但帳號未驗證則到驗證頁
-    if (!user.value?.email_verified_at && to.name !== 'EmailVerify') {
+    if (!user.value?.is_email_verified && to.name !== 'EmailVerify') {
       return { name: 'EmailVerify' }
     }
+    // 有登入但為預設密碼需軒修改密碼
+    if (!user.value?.is_password_changed && to.name !== 'Profile') {
+      warningMsg('請先重設密碼！')
+
+      return { name: 'Profile' }
+    }
+
     // 有登入且在不需登入的頁面則導回首頁
     if (!to.meta.requireAuth) {
       return { name: 'index' }

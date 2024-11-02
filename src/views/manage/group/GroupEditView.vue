@@ -67,7 +67,7 @@ async function fetchData() {
     const [rolesData, groupData] = await Promise.all([getGroupEdit(id), getGroup(id)])
 
     Object.keys(originValue.value).forEach((key) => {
-      if (key in groupData.data) {
+      if (Object.prototype.hasOwnProperty.call(groupData.data, key)) {
         originValue.value[key] = groupData.data[key]
       }
     })

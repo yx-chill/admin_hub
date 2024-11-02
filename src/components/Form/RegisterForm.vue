@@ -89,7 +89,7 @@ const handleRegister = async (data) => {
     await router.push({ name: 'index' })
     successMsg(`註冊成功！ 歡迎 ${res.name}，請先完成信箱驗證`)
   } catch (error) {
-    errorMsg(error)
+    // errorMsg(error)
   } finally {
     pending.value = false
   }

@@ -5,6 +5,7 @@ import { NSpin, NForm, NFormItem, NInput, NSwitch } from 'naive-ui'
 import { getRolesEdit, getRole, editRoles } from '@/api/api'
 import { successMsg } from '@/composables/useMessage'
 
+import cloneDeep from 'lodash-es/cloneDeep'
 import isEqual from 'lodash-es/isEqual'
 import BtnBack from '@/components/Btn/BtnBack.vue'
 import BreadcrumbComponents from '@/components/BreadcrumbComponents.vue'
@@ -57,7 +58,7 @@ const fetchData = async () => {
         )
       })
 
-      formValue.value = JSON.parse(JSON.stringify(originValue.value))
+      formValue.value = cloneDeep(originValue.value)
     }
   } catch (error) {
     if (error.status == 404) {
@@ -83,10 +84,7 @@ const submit = () => {
 
   formRef.value?.validate(async (errors) => {
     if (!errors) {
-      await handleEdit({
-        _method: 'put',
-        ...formValue.value
-      })
+      await handleEdit(formValue.value)
       await router.push({ name: 'Role' })
       successMsg('修改成功！')
     } else {
@@ -105,7 +103,7 @@ function scrollAndFocusToError(errors) {
 }
 
 function reset() {
-  formValue.value = JSON.parse(JSON.stringify(originValue.value))
+  formValue.value = cloneDeep(originValue.value)
   formRef.value?.restoreValidation()
 }
 

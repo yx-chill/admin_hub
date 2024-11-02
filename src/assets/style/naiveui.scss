@@ -164,3 +164,14 @@
     padding-bottom: 3px;
   }
 }
+
+// select
+.n-select {
+
+  &.round {
+
+    .n-base-selection {
+      border-radius: 50px;
+    }
+  }
+}

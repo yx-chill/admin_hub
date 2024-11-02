@@ -63,7 +63,6 @@ async function fetchData() {
     fetching.value = true
     const res = await getGroupCreate()
     data.value = res?.data || {}
-    console.log(data.value)
 
     originValue.value.level = data.value.level
     formValue.value.level = data.value.level

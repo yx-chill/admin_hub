@@ -46,7 +46,9 @@ const breadcrumbList = [{ title: '帳號設定' }]
           <div class="info">
             <p class="account">
               {{ user.account }}
-              <span class="tag">管理員</span>
+              <span class="tag">
+                {{ user.user_group }}
+              </span>
             </p>
             <p class="email">
               <Icon icon="si:mail-duotone" />

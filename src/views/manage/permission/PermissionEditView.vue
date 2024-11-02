@@ -6,6 +6,7 @@ import { NSpin, NForm, NFormItem, NInput, NSwitch } from 'naive-ui'
 import { getPermission, editPermissions } from '@/api/api'
 import { successMsg } from '@/composables/useMessage'
 
+import cloneDeep from 'lodash-es/cloneDeep'
 import isEqual from 'lodash-es/isEqual'
 import BtnBack from '@/components/Btn/BtnBack.vue'
 import BreadcrumbComponents from '@/components/BreadcrumbComponents.vue'
@@ -34,7 +35,7 @@ const originValue = ref({
   }
 })
 // formValue
-const formValue = ref(JSON.parse(JSON.stringify(originValue.value)))
+const formValue = ref(cloneDeep(originValue.value))
 // rules
 const rules = {
   name: {
@@ -63,7 +64,7 @@ const fetchData = async () => {
         action: { ...data.value.action }
       }
 
-      formValue.value = JSON.parse(JSON.stringify(originValue.value))
+      formValue.value = cloneDeep(originValue.value)
     }
   } catch (error) {
     if (error.status == 404) {
@@ -112,7 +113,7 @@ function scrollAndFocusToError(errors) {
 }
 
 function reset() {
-  formValue.value = JSON.parse(JSON.stringify(originValue.value))
+  formValue.value = cloneDeep(originValue.value)
   formRef.value?.restoreValidation()
 }
 
