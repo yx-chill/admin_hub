@@ -21,6 +21,9 @@
   --right-offset-shadow: 0 0 #0000;
   --item-background: #fff;
   --input-background: rgba(0, 0, 0, 0.1);
+  --blockquote-border: #e5e7eb;
+  --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --tw-ring-offset-shadow: 0 0 #0000;
 
   // weight
   --copyright-weight: 400;
@@ -51,6 +54,9 @@
   --right-offset-shadow: 0 0 #fff0;
   --item-background: #333;
   --input-background: rgba(255, 255, 255, 0.1);
+  --blockquote-border: #4b5563;
+  --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --tw-ring-offset-shadow: 0 0 #ffff;
 
   // weight
   --copyright-weight: 300;
@@ -116,4 +122,8 @@ ul,
 ol {
   list-style: none;
   padding: 0;
+}
+
+.hidden {
+  display: none;
 }

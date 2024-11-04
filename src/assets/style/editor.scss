@@ -1,0 +1,242 @@
+.editor-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  column-gap: 8px;
+  font-size: 1.125rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  margin-bottom: 5px;
+
+  span {
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: var(--color);
+  }
+}
+
+.editor-container {
+  padding: 8px 12px 8px;
+  margin-top: 8px;
+
+  &.code {
+    background-color: #000;
+    margin-top: 0;
+
+    .html-textarea {
+      color: #ffffffde;
+    }
+  }
+}
+
+.html-textarea {
+  width: 100%;
+  height: 100%;
+  font-size: 1rem;
+  border: none;
+  resize: none;
+}
+
+.btn-editor-item {
+  width: 28px;
+  height: 28px;
+  background: transparent;
+  border-radius: 4px;
+  border: none;
+  padding: 4px;
+  transition: 0.3s ease;
+
+  &:hover,
+  &.active {
+    background: var(--color);
+
+    svg {
+      color: #fff;
+    }
+  }
+
+  svg {
+    width: 20px;
+    height: 20px;
+    color: var(--color-text);
+    transition: 0.3s ease;
+  }
+}
+
+.tiptap {
+  min-height: 300px;
+  outline: none;
+
+  &.html-textarea {
+    color: var(--color-text);
+    background: transparent;
+  }
+}
+
+// 內容預設樣式
+.editor {
+  a {
+    color: var(--color);
+
+    &:hover {
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+  }
+
+  img {
+    margin: 2rem 0;
+
+    &.ProseMirror-selectednode {
+      outline: 2px solid var(--color);
+    }
+  }
+
+  strong {
+    font-weight: bold;
+  }
+
+  em {
+    font-style: italic;
+  }
+
+  s {
+    text-decoration: line-through;
+  }
+
+  h1 {
+    display: block;
+    font-size: 2em;
+    margin-block-start: 0.67em;
+    margin-block-end: 0.67em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    font-weight: bold;
+    unicode-bidi: isolate;
+  }
+
+  h2 {
+    display: block;
+    font-size: 1.5em;
+    margin-block-start: 0.83em;
+    margin-block-end: 0.83em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    font-weight: bold;
+    unicode-bidi: isolate;
+  }
+
+  h3 {
+    display: block;
+    font-size: 1.17em;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    font-weight: bold;
+    unicode-bidi: isolate;
+  }
+
+  h4 {
+    display: block;
+    margin-block-start: 1.33em;
+    margin-block-end: 1.33em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    font-weight: bold;
+    unicode-bidi: isolate;
+  }
+
+  h5 {
+    display: block;
+    font-size: 0.83em;
+    margin-block-start: 1.67em;
+    margin-block-end: 1.67em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    font-weight: bold;
+    unicode-bidi: isolate;
+  }
+
+  h6 {
+    display: block;
+    font-size: 0.67em;
+    margin-block-start: 2.33em;
+    margin-block-end: 2.33em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    font-weight: bold;
+    unicode-bidi: isolate;
+  }
+
+  p {
+    display: block;
+    line-height: 1.75;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    unicode-bidi: isolate;
+  }
+
+  ol {
+    display: block;
+    list-style-type: decimal;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    padding-inline-start: 40px;
+    unicode-bidi: isolate;
+  }
+
+  ul {
+    display: block;
+    list-style-type: disc;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    padding-inline-start: 40px;
+    unicode-bidi: isolate;
+  }
+
+  li {
+    display: list-item;
+    text-align: -webkit-match-parent;
+    unicode-bidi: isolate;
+  }
+
+  blockquote {
+    display: block;
+    border-left: 4px solid var(--blockquote-border);
+    padding-left: 1rem;
+    margin-block-start: 20px;
+    margin-block-end: 0;
+    margin-inline-start: 0;
+    margin-inline-end: 0;
+    unicode-bidi: isolate;
+  }
+
+  hr {
+    display: block;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    border-style: inset;
+    border-width: 1px;
+    border-top: none;
+    border-color: var(--color-base);
+    opacity: 0.3;
+  }
+
+  u {
+    text-underline-offset: 3px;
+  }
+
+  mark {
+    background-color: #FAF594;
+    border-radius: 0.4rem;
+    box-decoration-break: clone;
+    padding: 0.1rem 0.3rem;
+  }
+}
