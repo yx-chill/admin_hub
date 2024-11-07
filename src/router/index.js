@@ -10,7 +10,7 @@ import ManagerLayout from '@/layouts/ManagerLayout.vue'
 // page
 import LoginView from '@/views/LoginView.vue'
 
-import { warningMsg } from '@/composables/useMessage'
+import { warningMsg, errorMsg } from '@/composables/useMessage'
 
 
 const router = createRouter({
@@ -73,6 +73,7 @@ const router = createRouter({
             }
           },
         },
+        // 管理
         { // 權限管理
           path: 'permission',
           children: [
@@ -81,7 +82,8 @@ const router = createRouter({
               name: 'Permission',
               meta: {
                 layout: ManagerLayout,
-                requireAuth: true
+                requireAuth: true,
+                ability: { action: 'read', subject: 'permissions' }
               },
               component: () => import('@/views/manage/permission/PermissionView.vue')
             },
@@ -90,7 +92,8 @@ const router = createRouter({
               name: 'PermissionCreate',
               meta: {
                 layout: ManagerLayout,
-                requireAuth: true
+                requireAuth: true,
+                ability: { action: 'create', subject: 'permissions' }
               },
               component: () => import('@/views/manage/permission/PermissionCreateView.vue')
             },
@@ -99,7 +102,8 @@ const router = createRouter({
               name: 'PermissionEdit',
               meta: {
                 layout: ManagerLayout,
-                requireAuth: true
+                requireAuth: true,
+                ability: { action: 'update', subject: 'permissions' }
               },
               component: () => import('@/views/manage/permission/PermissionEditView.vue')
             }
@@ -113,7 +117,8 @@ const router = createRouter({
               name: 'Role',
               meta: {
                 layout: ManagerLayout,
-                requireAuth: true
+                requireAuth: true,
+                ability: { action: 'read', subject: 'roles' }
               },
               component: () => import('@/views/manage/role/RoleView.vue')
             },
@@ -122,7 +127,8 @@ const router = createRouter({
               name: 'RoleCreate',
               meta: {
                 layout: ManagerLayout,
-                requireAuth: true
+                requireAuth: true,
+                ability: { action: 'create', subject: 'roles' }
               },
               component: () => import('@/views/manage/role/RoleCreateView.vue')
             },
@@ -131,7 +137,8 @@ const router = createRouter({
               name: 'RoleEdit',
               meta: {
                 layout: ManagerLayout,
-                requireAuth: true
+                requireAuth: true,
+                ability: { action: 'update', subject: 'roles' }
               },
               component: () => import('@/views/manage/role/RoleEditView.vue')
             }
@@ -145,7 +152,8 @@ const router = createRouter({
               name: 'Group',
               meta: {
                 layout: ManagerLayout,
-                requireAuth: true
+                requireAuth: true,
+                ability: { action: 'read', subject: 'userGroups' }
               },
               component: () => import('@/views/manage/group/GroupView.vue')
             },
@@ -154,7 +162,8 @@ const router = createRouter({
               name: 'GroupCreate',
               meta: {
                 layout: ManagerLayout,
-                requireAuth: true
+                requireAuth: true,
+                ability: { action: 'create', subject: 'userGroups' }
               },
               component: () => import('@/views/manage/group/GroupCreateView.vue')
             },
@@ -163,7 +172,8 @@ const router = createRouter({
               name: 'GroupEdit',
               meta: {
                 layout: ManagerLayout,
-                requireAuth: true
+                requireAuth: true,
+                ability: { action: 'update', subject: 'userGroups' }
               },
               component: () => import('@/views/manage/group/GroupEditView.vue')
             }
@@ -177,7 +187,8 @@ const router = createRouter({
               name: 'Users',
               meta: {
                 layout: ManagerLayout,
-                requireAuth: true
+                requireAuth: true,
+                ability: { action: 'read', subject: 'users' }
               },
               component: () => import('@/views/manage/users/UsersView.vue')
             },
@@ -186,7 +197,8 @@ const router = createRouter({
               name: 'UsersCreate',
               meta: {
                 layout: ManagerLayout,
-                requireAuth: true
+                requireAuth: true,
+                ability: { action: 'create', subject: 'users' }
               },
               component: () => import('@/views/manage/users/UsersCreateView.vue')
             },
@@ -195,12 +207,47 @@ const router = createRouter({
               name: 'UsersEdit',
               meta: {
                 layout: ManagerLayout,
-                requireAuth: true
+                requireAuth: true,
+                ability: { action: 'update', subject: 'users' }
               },
               component: () => import('@/views/manage/users/UsersEditView.vue')
             }
           ]
         },
+        // 維護
+        { // banner維護
+          path: 'banner',
+          children: [
+            { // 列表
+              path: '',
+              name: 'Banner',
+              meta: {
+                layout: ManagerLayout,
+                requireAuth: true
+              },
+              component: () => import('@/views/maintain/banner/BannerView.vue')
+            },
+            // { // 新增
+            //   path: 'create',
+            //   name: 'UsersCreate',
+            //   meta: {
+            //     layout: ManagerLayout,
+            //     requireAuth: true
+            //   },
+            //   component: () => import('@/views/manage/users/UsersCreateView.vue')
+            // },
+            // { // 編輯
+            //   path: 'edit/:id',
+            //   name: 'UsersEdit',
+            //   meta: {
+            //     layout: ManagerLayout,
+            //     requireAuth: true
+            //   },
+            //   component: () => import('@/views/manage/users/UsersEditView.vue')
+            // }
+          ]
+        },
+        // 設定
         { // 個人資料
           path: 'profile',
           name: 'Profile',
@@ -231,7 +278,7 @@ const router = createRouter({
 router.beforeEach(async (to) => {
   const authStore = useAuthStore()
   const stateStore = useStateStore()
-  const { isAuthenticated, isLoading, user } = storeToRefs(authStore)
+  const { isAuthenticated, isLoading, user, ability } = storeToRefs(authStore)
   const { menuState } = storeToRefs(stateStore)
 
   // 等待使用者資訊加載完成
@@ -254,7 +301,7 @@ router.beforeEach(async (to) => {
     if (!user.value?.is_email_verified && to.name !== 'EmailVerify') {
       return { name: 'EmailVerify' }
     }
-    // 有登入但為預設密碼需軒修改密碼
+    // 有登入但為預設密碼需修改密碼
     if (!user.value?.is_password_changed && to.name !== 'Profile') {
       warningMsg('請先重設密碼！')
 
@@ -264,6 +311,16 @@ router.beforeEach(async (to) => {
     // 有登入且在不需登入的頁面則導回首頁
     if (!to.meta.requireAuth) {
       return { name: 'index' }
+    }
+
+    // 權限判斷
+    if (to.meta.ability) {
+      const { action, subject } = to.meta.ability
+
+      if (ability.value.cannot(action, subject)) {
+        errorMsg('權限不足，無法瀏覽！')
+        return { name: 'index' }
+      }
     }
   }
 })

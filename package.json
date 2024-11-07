@@ -11,6 +11,8 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@casl/ability": "^6.7.2",
+    "@casl/vue": "^2.2.2",
     "@formkit/auto-animate": "^0.8.2",
     "@tiptap/extension-bubble-menu": "^2.9.1",
     "@tiptap/extension-color": "^2.9.1",

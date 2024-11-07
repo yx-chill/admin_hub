@@ -1,9 +1,13 @@
 import { defineStore } from 'pinia'
+import { createMongoAbility as createAbility } from '@casl/ability'
+import { defineAbilitiesFor } from '@/casl/ability'
+
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     user: null,
-    isLoading: true
+    ability: createAbility([]),
+    isLoading: true,
   }),
   getters: {
     isAuthenticated: (state) => !!state.user?.id
@@ -11,6 +15,7 @@ export const useAuthStore = defineStore('auth', {
   actions: {
     setUser(user) {
       this.user = user
+      this.ability = defineAbilitiesFor(user.permissions || {})
       this.isLoading = false
     },
     clearUser() {

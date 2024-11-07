@@ -8,7 +8,7 @@ import ForgotForm from '@/components/Form/ForgotForm.vue'
 </script>
 
 <template>
-  <main class="main">
+   <main class="main">
     <section class="block">
       <div class="form-block">
         <NTabs

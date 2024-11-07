@@ -1,5 +1,6 @@
 <script setup>
 import { ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useAuthStore } from '@/stores/auth'
 import { NSpin, NSwitch, NPagination } from 'naive-ui'
@@ -19,8 +20,10 @@ import railStyle from '@/utils/railStyle'
 const itemCount = ref(0) // 總筆數
 
 const breadcrumbList = [{ title: '帳號管理' }]
+const route = useRoute()
+const { subject } = route.meta.ability
 const useAuth = useAuthStore()
-const { user } = storeToRefs(useAuth)
+const { user, ability } = storeToRefs(useAuth)
 const data = ref([])
 const fetching = ref(true)
 const pending = ref(false)
@@ -139,7 +142,7 @@ async function fetchData() {
       <SearchComponent @search="search" />
 
       <!-- 排序、新增按鈕 -->
-      <BtnCreate name="UsersCreate"></BtnCreate>
+      <BtnCreate v-if="ability.can('create', subject)" name="UsersCreate"></BtnCreate>
 
       <!-- head -->
       <div class="users-list-header users-grid sticky-header row-item">
@@ -174,6 +177,7 @@ async function fetchData() {
                 size="small"
                 :round="false"
                 :rail-style="railStyle"
+                :disabled="ability.cannot('delete', subject)"
                 @update:value="(value) => handleChange(value, item.id)"
               />
             </div>
@@ -187,8 +191,20 @@ async function fetchData() {
             </div>
             <!-- 操作 -->
             <div class="operate item">
-              <RouterLink :to="{ name: 'UsersEdit', params: { id: item.id } }">編輯</RouterLink>
-              <button type="button" class="del" @click="handleDeleteClick(item.id)">刪除</button>
+              <RouterLink
+                v-if="ability.can('update', subject)"
+                :to="{ name: 'UsersEdit', params: { id: item.id } }"
+              >
+                編輯
+              </RouterLink>
+              <button
+                v-if="ability.can('delete', subject)"
+                type="button"
+                class="del"
+                @click="handleDeleteClick(item.id)"
+              >
+                刪除
+              </button>
             </div>
           </li>
         </ul>

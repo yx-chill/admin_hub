@@ -1,5 +1,8 @@
 <script setup>
 import { ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
+import { storeToRefs } from 'pinia'
+import { useAuthStore } from '@/stores/auth'
 import { NSpin, NSwitch, NPagination } from 'naive-ui'
 import { useDebounceFn } from '@vueuse/core'
 import { getGroups, deleteGroups, groupStatus } from '@/api/api'
@@ -17,6 +20,10 @@ import railStyle from '@/utils/railStyle'
 const itemCount = ref(0) // 總筆數
 
 const breadcrumbList = [{ title: '群組管理' }]
+const route = useRoute()
+const { subject } = route.meta.ability
+const authStore = useAuthStore()
+const { ability } = storeToRefs(authStore)
 const data = ref([])
 const fetching = ref(true)
 const pending = ref(false)
@@ -128,7 +135,7 @@ async function fetchData() {
       <SearchComponent @search="search" />
 
       <!-- 排序、新增按鈕 -->
-      <BtnCreate name="GroupCreate"></BtnCreate>
+      <BtnCreate v-if="ability.can('create', subject)" name="GroupCreate"></BtnCreate>
 
       <!-- head -->
       <div class="role-list-header sticky-header sticky-header row-item role-grid">
@@ -157,6 +164,7 @@ async function fetchData() {
                 size="small"
                 :round="false"
                 :rail-style="railStyle"
+                :disabled="ability.cannot('delete', subject)"
                 @update:value="(value) => handleChange(value, item.id)"
               />
             </div>
@@ -174,8 +182,20 @@ async function fetchData() {
             </div>
             <!-- 操作 -->
             <div class="operate item">
-              <RouterLink :to="{ name: 'GroupEdit', params: { id: item.id } }">編輯</RouterLink>
-              <button type="button" class="del" @click="handleDeleteClick(item.id)">刪除</button>
+              <RouterLink
+                v-if="ability.can('update', subject)"
+                :to="{ name: 'GroupEdit', params: { id: item.id } }"
+              >
+                編輯
+              </RouterLink>
+              <button
+                v-if="ability.can('delete', subject)"
+                type="button"
+                class="del"
+                @click="handleDeleteClick(item.id)"
+              >
+                刪除
+              </button>
             </div>
           </li>
         </ul>

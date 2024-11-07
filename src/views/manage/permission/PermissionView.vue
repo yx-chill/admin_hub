@@ -1,7 +1,11 @@
 <script setup>
 import { onMounted, ref } from 'vue'
+import { useRoute } from 'vue-router'
+import { storeToRefs } from 'pinia'
+import { useAuthStore } from '@/stores/auth'
 import { NSpin } from 'naive-ui'
 import { getPermissions, deletePermissions, sortPermissions } from '@/api/api'
+import { Icon } from '@iconify/vue'
 import { successMsg, errorMsg } from '@/composables/useMessage'
 
 import cloneDeep from 'lodash-es/cloneDeep'
@@ -11,9 +15,12 @@ import BtnBack from '@/components/Btn/BtnBack.vue'
 import BreadcrumbComponents from '@/components/BreadcrumbComponents.vue'
 import BtnCreate from '@/components/Btn/BtnCreate.vue'
 import DeleteModal from '@/components/Modal/DeleteModal.vue'
-import { Icon } from '@iconify/vue'
 
 const breadcrumbList = [{ title: '權限管理' }]
+const route = useRoute()
+const { subject } = route.meta.ability
+const authStore = useAuthStore()
+const { ability } = storeToRefs(authStore)
 const originData = ref([])
 const data = ref([])
 const pending = ref(true)
@@ -94,7 +101,7 @@ onMounted(() => {
     <section class="permission-list-block block">
       <h3 class="page-title">權限管理</h3>
 
-      <BtnCreate name="PermissionCreate">
+      <BtnCreate v-if="ability.can('create', subject)" name="PermissionCreate">
         <button type="button" class="btn-sort" :disabled="canSort" @click="canSort = !canSort">
           <Icon icon="hugeicons:sort-by-down-01" />
         </button>
@@ -170,10 +177,20 @@ onMounted(() => {
               </div>
               <!-- 操作 -->
               <div class="operate item">
-                <RouterLink :to="{ name: 'PermissionEdit', params: { id: item.id } }"
-                  >編輯</RouterLink
+                <RouterLink
+                  v-if="ability.can('update', subject)"
+                  :to="{ name: 'PermissionEdit', params: { id: item.id } }"
                 >
-                <button type="button" class="del" @click="handleDeleteClick(item.id)">刪除</button>
+                  編輯
+                </RouterLink>
+                <button
+                  v-if="ability.can('delete', subject)"
+                  type="button"
+                  class="del"
+                  @click="handleDeleteClick(item.id)"
+                >
+                  刪除
+                </button>
               </div>
             </li>
           </ul>

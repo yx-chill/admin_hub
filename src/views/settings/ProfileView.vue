@@ -36,7 +36,7 @@ const breadcrumbList = [{ title: '帳號設定' }]
           </div>
 
           <button type="button" class="btn-edit-img" @click="showAvatarCropper = true">
-            <Icon icon="solar:gallery-edit-broken" />
+            <Icon icon="ph:camera-duotone" />
           </button>
         </div>
 
@@ -168,7 +168,7 @@ const breadcrumbList = [{ title: '帳號設定' }]
     bottom: 4px;
     z-index: 2;
     transition: 0.3s ease;
-    padding: 10px;
+    padding: 8px;
     opacity: 0;
     pointer-events: none;
 

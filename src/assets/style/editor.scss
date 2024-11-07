@@ -85,6 +85,10 @@
   }
 
   img {
+    max-width: 100%;
+    height: auto;
+    max-height: 100%;
+    object-fit: contain;
     margin: 2rem 0;
 
     &.ProseMirror-selectednode {

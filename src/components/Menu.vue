@@ -16,7 +16,7 @@ const stateStore = useStateStore()
 const { menuState } = storeToRefs(stateStore)
 
 const authStore = useAuthStore()
-const { user } = storeToRefs(authStore)
+const { user, ability } = storeToRefs(authStore)
 const router = useRouter()
 
 onClickOutside(menuRef, () => {
@@ -42,7 +42,7 @@ const handleLogout = async () => {
         <p class="group-title">管理</p>
 
         <ul class="links">
-          <li>
+          <li v-if="ability.can('read', 'permissions')">
             <RouterLink
               class="link"
               :to="{ name: 'Permission' }"
@@ -54,7 +54,7 @@ const handleLogout = async () => {
               <p>權限管理</p>
             </RouterLink>
           </li>
-          <li>
+          <li v-if="ability.can('read', 'roles')">
             <RouterLink
               class="link"
               :to="{ name: 'Role' }"
@@ -66,7 +66,7 @@ const handleLogout = async () => {
               <p>角色管理</p>
             </RouterLink>
           </li>
-          <li>
+          <li v-if="ability.can('read', 'userGroups')">
             <RouterLink
               class="link"
               :to="{ name: 'Group' }"
@@ -78,7 +78,7 @@ const handleLogout = async () => {
               <p>群組管理</p>
             </RouterLink>
           </li>
-          <li>
+          <li v-if="ability.can('read', 'users')">
             <RouterLink
               class="link"
               :to="{ name: 'Users' }"
@@ -97,6 +97,14 @@ const handleLogout = async () => {
         <p class="group-title">維護</p>
 
         <ul class="links">
+          <li>
+            <RouterLink class="link" :to="{ name: 'Banner' }">
+              <div class="icon">
+                <Icon icon="material-symbols-light:planner-banner-ad-pt-outline" />
+              </div>
+              <p>橫幅維護</p>
+            </RouterLink>
+          </li>
           <li>
             <RouterLink class="link" :to="{ name: 'index' }">
               <div class="icon">

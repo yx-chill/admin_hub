@@ -17,9 +17,14 @@ import Menu from '@/components/Menu.vue'
 <style scoped>
 .page {
   position: relative;
-  display: flex;
+  display: grid;
+  grid-template-columns: 270px calc(100% - 270px - 20px);
   align-items: flex-start;
   column-gap: var(--base-gap);
+
+  @media (max-width: 1280px) {
+    grid-template-columns: 1fr;
+  }
 }
 
 .content {
