@@ -135,7 +135,7 @@ onMounted(() => {
 <template>
   <main class="main">
     <div class="page-top">
-      <BtnBack name="index" />
+      <BtnBack name="Users" />
       <BreadcrumbComponents :list="breadcrumbList" />
     </div>
 

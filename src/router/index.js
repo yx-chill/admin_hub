@@ -223,7 +223,8 @@ const router = createRouter({
               name: 'Banner',
               meta: {
                 layout: ManagerLayout,
-                requireAuth: true
+                requireAuth: true,
+                ability: { action: 'read', subject: 'users' }
               },
               component: () => import('@/views/maintain/banner/BannerView.vue')
             },

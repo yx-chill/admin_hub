@@ -38,7 +38,7 @@ const handleLogin = async (data) => {
 
   try {
     const res = await login(data)
-    authStore.setUser(res)
+    authStore.setUser(res.data)
     await router.push({ name: 'index' })
     successMsg(`歡迎 ${res.name}`)
   } catch (err) {

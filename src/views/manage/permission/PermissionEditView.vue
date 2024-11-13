@@ -4,6 +4,8 @@ import { useRoute, useRouter } from 'vue-router'
 import { NSpin, NForm, NFormItem, NInput, NSwitch } from 'naive-ui'
 
 import { getPermission, editPermissions } from '@/api/api'
+import { getUser } from '@/api/auth'
+import { useAuthStore } from '@/stores/auth'
 import { successMsg } from '@/composables/useMessage'
 
 import cloneDeep from 'lodash-es/cloneDeep'
@@ -18,6 +20,7 @@ const breadcrumbList = [{ title: '權限管理', name: 'Permission' }, { title: 
 const route = useRoute()
 const router = useRouter()
 const { id } = route.params
+const authStore = useAuthStore()
 const data = ref('')
 const fetching = ref(true)
 const pending = ref(false)
@@ -76,10 +79,12 @@ const fetchData = async () => {
 }
 
 const handleEdit = async (id, data) => {
-  pending.value = true
-
   try {
+    pending.value = true
     await editPermissions(id, data)
+    // 更新權限
+    const userData = await getUser()
+    authStore.setUser(userData.data)
   } finally {
     reset()
     pending.value = false
@@ -91,10 +96,7 @@ const submit = () => {
 
   formRef.value?.validate(async (errors) => {
     if (!errors) {
-      await handleEdit(id, {
-        _method: 'put',
-        ...formValue.value
-      })
+      await handleEdit(id, formValue.value)
       await router.push({ name: 'Permission' })
       successMsg('修改成功！')
     } else {

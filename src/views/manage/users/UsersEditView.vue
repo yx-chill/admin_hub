@@ -4,6 +4,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useAuthStore } from '@/stores/auth'
 import { NSpin, NForm, NFormItem, NInput, NSelect, NSwitch } from 'naive-ui'
+import { getUser as getUserInfo } from '@/api/auth'
 import { getUsersEdit, getUser, editUser } from '@/api/api.js'
 import { successMsg } from '@/composables/useMessage'
 
@@ -94,6 +95,9 @@ const handleEdit = async (data) => {
   try {
     pending.value = true
     await editUser(id, data)
+    // 更新權限
+    const userData = await getUserInfo()
+    useAuth.setUser(userData.data)
   } finally {
     reset()
     pending.value = false

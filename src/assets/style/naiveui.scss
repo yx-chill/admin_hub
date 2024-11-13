@@ -236,3 +236,16 @@
     display: none;
   }
 }
+
+.n-image-preview-toolbar {
+  column-gap: 10px;
+  padding: 0 16px;
+
+  .n-base-icon {
+    padding: 0;
+  }
+}
+
+.n-image-preview-overlay {
+  backdrop-filter: blur(2px);
+}

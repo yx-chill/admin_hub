@@ -6,6 +6,7 @@ import { useAuthStore } from '@/stores/auth'
 import { NSpin, NSwitch, NPagination } from 'naive-ui'
 import { useDebounceFn } from '@vueuse/core'
 import { getGroups, deleteGroups, groupStatus } from '@/api/api'
+import { getUser } from '@/api/auth'
 import { successMsg, errorMsg } from '@/composables/useMessage'
 
 import BtnBack from '@/components/Btn/BtnBack.vue'
@@ -67,6 +68,10 @@ const handleConfirmDelete = async () => {
     successMsg('刪除成功！')
     // 重新獲取列表數據
     data.value = data.value.filter((item) => item.id !== selectedId.value)
+
+    // 更新權限
+    const userData = await getUser()
+    authStore.setUser(userData.data)
   } catch (error) {
     errorMsg('刪除失敗')
   } finally {

@@ -4,6 +4,8 @@ import { useRoute, useRouter } from 'vue-router'
 import { NSpin, NForm, NFormItem, NInput, NInputNumber, NSwitch, NSelect } from 'naive-ui'
 
 import { getGroupEdit, getGroup, editGroup } from '@/api/api'
+import { getUser } from '@/api/auth'
+import { useAuthStore } from '@/stores/auth'
 import { successMsg } from '@/composables/useMessage'
 
 import cloneDeep from 'lodash-es/cloneDeep'
@@ -18,6 +20,7 @@ const breadcrumbList = [{ title: '群組管理', name: 'Group' }, { title: '編�
 const route = useRoute()
 const router = useRouter()
 const { id } = route.params
+const authStore = useAuthStore()
 const data = ref([])
 const fetching = ref(true)
 const pending = ref(false)
@@ -83,6 +86,9 @@ const handleEdit = async (data) => {
   try {
     pending.value = true
     await editGroup(id, data)
+    // 更新權限
+    const userData = await getUser()
+    authStore.setUser(userData.data)
   } finally {
     reset()
     pending.value = false

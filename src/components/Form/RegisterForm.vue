@@ -85,7 +85,7 @@ const handleRegister = async (data) => {
   try {
     pending.value = true
     const res = await register(data)
-    authStore.setUser(res)
+    authStore.setUser(res.data)
     await router.push({ name: 'index' })
     successMsg(`註冊成功！ 歡迎 ${res.name}，請先完成信箱驗證`)
   } catch (error) {

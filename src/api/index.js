@@ -9,6 +9,7 @@ let isLoggingOut = false
 
 const handleLogout = async () => {
   if (isLoggingOut) return
+
   isLoggingOut = true
   const authStore = useAuthStore()
 

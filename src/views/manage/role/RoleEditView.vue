@@ -3,6 +3,8 @@ import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { NSpin, NForm, NFormItem, NInput, NSwitch } from 'naive-ui'
 import { getRolesEdit, getRole, editRoles } from '@/api/api'
+import { getUser } from '@/api/auth'
+import { useAuthStore } from '@/stores/auth'
 import { successMsg } from '@/composables/useMessage'
 
 import cloneDeep from 'lodash-es/cloneDeep'
@@ -19,6 +21,7 @@ const breadcrumbList = [{ title: '角色管理', name: 'Role' }, { title: '編�
 const route = useRoute()
 const router = useRouter()
 const { id } = route.params
+const authStore = useAuthStore()
 const data = ref([])
 const fetching = ref(true)
 const pending = ref(false)
@@ -73,6 +76,9 @@ const handleEdit = async (data) => {
   try {
     pending.value = true
     await editRoles(id, data)
+    // 更新權限
+    const userData = await getUser()
+    authStore.setUser(userData.data)
   } finally {
     reset()
     pending.value = false

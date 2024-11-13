@@ -5,6 +5,7 @@ import { storeToRefs } from 'pinia'
 import { useAuthStore } from '@/stores/auth'
 import { NSpin } from 'naive-ui'
 import { getRoles, deleteRoles, sortRoles } from '@/api/api'
+import { getUser } from '@/api/auth'
 import { Icon } from '@iconify/vue'
 import { successMsg, errorMsg } from '@/composables/useMessage'
 
@@ -58,6 +59,9 @@ const handleConfirmDelete = async () => {
     originData.value = originData.value.filter((item) => item.id !== selectedId.value)
 
     data.value = cloneDeep(originData.value)
+    // 更新權限
+    const userData = await getUser()
+    authStore.setUser(userData.data)
   } catch (error) {
     errorMsg('刪除失敗')
   } finally {

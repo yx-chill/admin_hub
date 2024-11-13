@@ -48,7 +48,7 @@ export const getPermission = async (id) => {
 export const editPermissions = async (id, data) => {
   return await axios({
     url: `/permissions/${id}`,
-    method: 'post',
+    method: 'put',
     data
   })
 }
